@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "10817099231",
+    "project_id": "its-urgent-adb83",
+    "storage_bucket": "its-urgent-adb83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10817099231:android:5b492274dc897aa907606a",
+        "android_client_info": {
+          "package_name": "com.hsiharki.itsurgent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlJYFiu3micgVtQp9qMflKt1Gtml7KpgM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
