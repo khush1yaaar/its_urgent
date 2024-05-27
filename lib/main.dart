@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:its_urgent/contants/theme.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -18,10 +19,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: darkTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.dark,
       home: const HomeScreen(),
     );
   }
