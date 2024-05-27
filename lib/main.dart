@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:its_urgent/contants/theme.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:its_urgent/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: darkTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
