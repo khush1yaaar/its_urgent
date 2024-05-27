@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
             width: double.infinity,
             height: 50,
           ),
-          Text("It's Urgent !", style: Theme.of(context).textTheme.displayLarge)
+          Text("It's Urgent !", style: Theme.of(context).textTheme.titleMedium!),
         ],
       ),
     );
