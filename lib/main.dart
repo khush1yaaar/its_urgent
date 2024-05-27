@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:its_urgent/contants/theme.dart';
-import 'package:its_urgent/screens/home_screen.dart';
+import 'package:its_urgent/routing/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:its_urgent/screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,12 +17,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.dark,
-      home: const SplashScreen(),
+      routerConfig: goRouter,
     );
   }
 }

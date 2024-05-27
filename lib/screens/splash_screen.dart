@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:its_urgent/screens/home_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:its_urgent/routing/app_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,8 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+      context.pushReplacementNamed(AppRoutes.homeScreen.name);
     });
   }
 
@@ -32,7 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
             width: double.infinity,
             height: 50,
           ),
-          Text("It's Urgent !", style: Theme.of(context).textTheme.titleMedium!),
+          Text("It's Urgent !",
+              style: Theme.of(context).textTheme.titleMedium!),
         ],
       ),
     );
