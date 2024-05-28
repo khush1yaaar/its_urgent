@@ -16,7 +16,9 @@ class AuthScreen extends ConsumerWidget {
         title: const Text("Welcome"),
       ),
       body: SignInScreen(
+        
         providers: authProviders,
+        showPasswordVisibilityToggle: true,
       ),
     );
   }
