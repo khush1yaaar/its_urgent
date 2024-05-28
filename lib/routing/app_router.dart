@@ -4,17 +4,25 @@ import 'package:its_urgent/helpers/go_router_refresh_stream.dart';
 import 'package:its_urgent/providers/firebase_auth_provider.dart';
 import 'package:its_urgent/screens/auth_screen.dart';
 import 'package:its_urgent/screens/common/error_screen.dart';
+import 'package:its_urgent/screens/email_verification.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
 
 // enum for named routes
-enum AppRoutes { splashScreen, homeScreen, authScreen, errorScreen }
+enum AppRoutes {
+  splashScreen,
+  homeScreen,
+  authScreen,
+  errorScreen,
+  verifyEmailScreen,
+}
 
 // Const route paths
 const authScreenPath = '/authScreen';
 const homeScreenPath = '/homeScreen';
 const splashScreenPath = '/';
 const errorScreenPath = '/errorScreen';
+const verifyEmailScreenPath = '/verifyEmailScreen';
 
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -40,8 +48,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       }
       // If the user is logged in and is on the splash screen or authentication screen
       else if (isLoggedIn && (isSplashRoute || isAuthRoute)) {
-        // Redirect to the home screen
-        return homeScreenPath;
+        final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
+
+        if (!isEmailVerified) {
+          // Redirect to the email verification screen if email is not verified
+          return verifyEmailScreenPath;
+        } else {
+          // Redirect to the home screen if email is verified
+          return homeScreenPath;
+        }
       }
       // No redirection needed, proceed with the current navigation
       return null;
@@ -64,6 +79,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: authScreenPath,
         name: AppRoutes.authScreen.name,
         builder: (context, state) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: verifyEmailScreenPath,
+        name: AppRoutes.verifyEmailScreen.name,
+        builder: (context, state) => const VerifyEmailScreen(),
       ),
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
