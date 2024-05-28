@@ -37,10 +37,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       if (!isLoggedIn && !isAuthRoute) {
         // Redirect to the authentication screen
         return authScreenPath;
-      } else if (isLoggedIn && (isSplashRoute || isAuthRoute)) {
+      }
+      // If the user is logged in and is on the splash screen or authentication screen
+      else if (isLoggedIn && (isSplashRoute || isAuthRoute)) {
+        // Redirect to the home screen
         return homeScreenPath;
       }
-      return null; // No redirection needed
+      // No redirection needed, proceed with the current navigation
+      return null;
     },
 
     // Automatically refresh the router when the Firebase user state changes

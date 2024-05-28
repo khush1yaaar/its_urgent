@@ -5,7 +5,7 @@ final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
-      seedColor: const Color(0xFFCEF9FF), brightness: Brightness.dark),
+      seedColor: const Color(0xFF1C78B3), brightness: Brightness.dark),
   textTheme: GoogleFonts.nunitoTextTheme(
     ThemeData(brightness: Brightness.dark).textTheme,
   ),

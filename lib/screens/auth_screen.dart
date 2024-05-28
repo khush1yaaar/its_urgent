@@ -16,9 +16,20 @@ class AuthScreen extends ConsumerWidget {
         title: const Text("Welcome"),
       ),
       body: SignInScreen(
-        
         providers: authProviders,
         showPasswordVisibilityToggle: true,
+        headerBuilder: (context, constraints, shrinkOffset) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Hero(
+                tag: 'logo',
+                child: Image.asset('assets/cropped_image.png'),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

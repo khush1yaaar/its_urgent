@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 10), () {
       context.pushReplacementNamed(AppRoutes.authScreen.name);
     });
   }
@@ -24,9 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/cropped_image.png',
-            width: 250,
+          Hero(
+            tag: 'logo',
+            child: Image.asset(
+              'assets/cropped_image.png',
+              width: 250,
+            ),
           ),
           const SizedBox(
             width: double.infinity,
