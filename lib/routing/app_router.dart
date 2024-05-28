@@ -1,12 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/screens/auth_screen.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
 
 enum AppRoutes {
   splashScreen,
   homeScreen,
+  authScreen,
 }
+
+
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -22,6 +26,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/homeScreen',
         name: AppRoutes.homeScreen.name,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/authScreen',
+        name: AppRoutes.authScreen.name,
+        builder: (context, state) => const AuthScreen(),
       ),
     ],
   );
