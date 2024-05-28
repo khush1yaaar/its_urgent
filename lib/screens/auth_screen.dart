@@ -15,21 +15,23 @@ class AuthScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: const Text("Welcome"),
       ),
-      body: SignInScreen(
-        providers: authProviders,
-        showPasswordVisibilityToggle: true,
-        headerBuilder: (context, constraints, shrinkOffset) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Hero(
-                tag: 'logo',
-                child: Image.asset('assets/cropped_image.png'),
+      body: Center(
+        child: SignInScreen(
+          providers: authProviders,
+          showPasswordVisibilityToggle: true,
+          headerBuilder: (context, constraints, shrinkOffset) {
+            return Padding(
+              padding: const EdgeInsets.all(20),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Hero(
+                  tag: 'logo',
+                  child: Image.asset('assets/cropped_image.png'),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
