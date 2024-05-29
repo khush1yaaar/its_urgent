@@ -1,6 +1,6 @@
 # its_urgent
 
-A new Flutter project.
+Live YouTube Updates: https://www.youtube.com/playlist?list=PLLx2TfaNTPhxWUjVwRsbgZxqJ1j0NkrC5
 
 ## Getting Started
 
