@@ -8,7 +8,7 @@ final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
 });
 
 final authProvidersProvider = Provider<List<ui_auth.AuthProvider>>((ref) {
-  return [ui_auth.EmailAuthProvider()];
+  return [ui_auth.PhoneAuthProvider()];
 });
 
 

@@ -48,15 +48,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       }
       // If the user is logged in and is on the splash screen or authentication screen
       else if (isLoggedIn && (isSplashRoute || isAuthRoute)) {
-        final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
+        // final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
 
-        if (!isEmailVerified) {
-          // Redirect to the email verification screen if email is not verified
-          return verifyEmailScreenPath;
-        } else {
-          // Redirect to the home screen if email is verified
-          return homeScreenPath;
-        }
+        // if (!isEmailVerified) {
+        //   // Redirect to the email verification screen if email is not verified
+        //   return verifyEmailScreenPath;
+        // } else {
+        //   // Redirect to the home screen if email is verified
+        //   return homeScreenPath;
+        // }
+        return homeScreenPath;
       }
       // No redirection needed, proceed with the current navigation
       return null;

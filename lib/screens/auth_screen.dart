@@ -18,7 +18,6 @@ class AuthScreen extends ConsumerWidget {
       body: Center(
         child: SignInScreen(
           providers: authProviders,
-          showPasswordVisibilityToggle: true,
           headerBuilder: (context, constraints, shrinkOffset) {
             return Padding(
               padding: const EdgeInsets.all(20),
