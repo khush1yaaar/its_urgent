@@ -19,7 +19,7 @@ dependencies:
   firebase_auth: ^4.19.6
   google_fonts: ^6.2.1
   firebase_ui_auth: ^1.14.0
-  intl_phone_number_input: ^0.7.4
+  flutter_multi_formatter: ^2.12.8
 
 
 

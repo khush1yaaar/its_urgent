@@ -13,6 +13,7 @@ class CountrySelectorButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedCountry = ref.watch(selectedCountryProvider);
     return Container(
+      width: MediaQuery.of(context).size.width * 0.6,
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
         border: Border(
@@ -22,28 +23,32 @@ class CountrySelectorButton extends ConsumerWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Expanded(
+            child: TextButton(
+              onPressed: () {
+                context.pushNamed(AppRoutes.countrySelectorScreen.name);
+              },
+              style: TextButton.styleFrom(
+                  shape: LinearBorder.bottom(),
+                  overlayColor: Colors.transparent),
+              child: Text(
+                selectedCountry == null
+                    ? "Choose a country"
+                    : selectedCountry.name,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
+            ),
+          ),
           Icon(
             Icons.arrow_drop_down,
             size: 16,
             color: Theme.of(context).colorScheme.primary,
-          ),
-          TextButton(
-            onPressed: () {
-              context.pushNamed(AppRoutes.countrySelectorScreen.name);
-            },
-            style: TextButton.styleFrom(
-                shape: LinearBorder.bottom(), overlayColor: Colors.transparent),
-            child: Text(
-              selectedCountry == null?
-              "Choose a country": selectedCountry.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
           ),
         ],
       ),

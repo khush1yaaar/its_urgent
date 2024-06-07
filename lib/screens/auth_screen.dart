@@ -13,14 +13,22 @@ class AuthScreen extends ConsumerStatefulWidget {
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController _phoneCodeController = TextEditingController();
-  final FocusNode _phoneNumberFocus = FocusNode();
-  final FocusNode _phoneCodeFocus = FocusNode();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
+  _updateButtonState() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneNumberController.addListener(_updateButtonState);
+  }
 
   @override
   void dispose() {
     _phoneCodeController.dispose();
-    _phoneNumberFocus.dispose();
-    _phoneCodeFocus.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -31,9 +39,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     _phoneCodeController.text = selectedCountry?.phoneCode ?? '';
 
     // once country is found, auto move to next field
-    if (selectedCountry != null) {
-      FocusScope.of(context).requestFocus(_phoneNumberFocus);
-    }
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -43,24 +49,44 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "It's Urgent app will need to verify your phone number. Carrier charges may apply.",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    "It's Urgent app will need to verify your phone number. Carrier charges may apply.",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const CountrySelectorButton(),
+                  PhoneCodeNumberForm(
+                    size: size,
+                    selectedCountry: selectedCountry,
+                    phoneCodeController: _phoneCodeController,
+                    phoneNumberController: _phoneNumberController,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            const CountrySelectorButton(),
-            PhoneCodeNumberForm(
-              size: size,
-              selectedCountry: selectedCountry,
-              phoneCodeFocus: _phoneCodeFocus,
-              phoneNumberFocus: _phoneNumberFocus,
-              phoneCodeController: _phoneCodeController,
+            ElevatedButton(
+              onPressed: selectedCountry != null &&
+                      _phoneNumberController.text.isNotEmpty
+                  ? () {
+                      print(
+                          "+${selectedCountry.phoneCode} ${_phoneNumberController.text}");
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+              child: const Text("Next"),
             ),
           ],
         ),

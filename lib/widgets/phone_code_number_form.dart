@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/model/country_code_item.dart';
 import 'package:its_urgent/providers/selected_country_provider.dart';
@@ -9,17 +10,14 @@ class PhoneCodeNumberForm extends ConsumerWidget {
     super.key,
     required this.size,
     required this.selectedCountry,
-    required FocusNode phoneNumberFocus,
-    required FocusNode phoneCodeFocus,
     required TextEditingController phoneCodeController,
-  })  : _phoneNumberFocus = phoneNumberFocus,
-        _phoneCodeController = phoneCodeController,
-        _phoneCodeFocus = phoneCodeFocus;
+    required TextEditingController phoneNumberController,
+  })  : _phoneCodeController = phoneCodeController,
+        _phoneNumberController = phoneNumberController;
 
   final Size size;
   final CountryCodeItem? selectedCountry;
-  final FocusNode _phoneNumberFocus;
-  final FocusNode _phoneCodeFocus;
+  final TextEditingController _phoneNumberController;
   final TextEditingController _phoneCodeController;
 
   @override
@@ -55,13 +53,9 @@ class PhoneCodeNumberForm extends ConsumerWidget {
                     },
                     onEditingComplete: () {
                       if (selectedCountry != null) {
-                        FocusScope.of(context).requestFocus(_phoneNumberFocus);
+                        FocusScope.of(context).nextFocus();
                       }
                     },
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(_phoneCodeFocus);
-                    },
-                    focusNode: _phoneCodeFocus,
                     autofocus: true,
                     controller: _phoneCodeController,
                     inputFormatters: [
@@ -79,10 +73,18 @@ class PhoneCodeNumberForm extends ConsumerWidget {
         SizedBox(
           width: size.width * 0.4,
           child: TextFormField(
-            focusNode: _phoneNumberFocus,
+            controller: _phoneNumberController,
+            onEditingComplete: () {
+              FocusScope.of(context).unfocus();
+            },
             decoration: const InputDecoration(hintText: "Phone Number"),
             inputFormatters: [
+              LengthLimitingTextInputFormatter(17),
               FilteringTextInputFormatter.digitsOnly,
+              // PhoneInputFormatter(
+              //   allowEndlessPhone: false,
+              //   defaultCountryCode: selectedCountry?.countryCode,
+              // ),
             ],
             keyboardType: TextInputType.phone,
           ),
