@@ -813,12 +813,5 @@ final countries = [
   {'name': 'Yemen', 'phoneCode': '+967', 'countryCode': 'YE', 'flag': '🇾🇪'},
   {'name': 'Zambia', 'phoneCode': '+260', 'countryCode': 'ZM', 'flag': '🇿🇲'},
   {'name': 'Zimbabwe', 'phoneCode': '+263', 'countryCode': 'ZW', 'flag': '🇿🇼'}
-].map(CountryCodeItem.fromJson);
+];
 
-final countriesByCountryCode = countries.fold<Map<String, CountryCodeItem>>(
-  {},
-  (previousValue, element) {
-    previousValue[element.countryCode] = element;
-    return previousValue;
-  },
-);

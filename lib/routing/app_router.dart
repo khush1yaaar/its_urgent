@@ -5,6 +5,7 @@ import 'package:its_urgent/providers/firebase_auth_provider.dart';
 import 'package:its_urgent/providers/splash_screen_provider.dart';
 import 'package:its_urgent/screens/auth_screen.dart';
 import 'package:its_urgent/screens/common/error_screen.dart';
+import 'package:its_urgent/screens/country_selector_screen.dart';
 import 'package:its_urgent/screens/email_verification.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
@@ -16,6 +17,7 @@ enum AppRoutes {
   authScreen,
   errorScreen,
   verifyEmailScreen,
+  countrySelectorScreen,
 }
 
 // Const route paths
@@ -24,6 +26,7 @@ const homeScreenPath = '/homeScreen';
 const splashScreenPath = '/';
 const errorScreenPath = '/errorScreen';
 const verifyEmailScreenPath = '/verifyEmailScreen';
+const countrySelectorScreenPath = '/countrySelectorScreen';
 
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -31,61 +34,31 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final firebaseAuth = ref.watch(firebaseAuthProvider);
   final splashScreenBoolean = ref.watch(splashScreenBooleanProvider);
 
+  // TODO - set the routing logic back to normal
   return GoRouter(
-    initialLocation: splashScreenPath,
+    initialLocation: authScreenPath,
     debugLogDiagnostics: true,
     // redirect: (context, state) {
-    //   // Check if the user is logged in
+    //   // check if the user is logged in
     //   final isLoggedIn = firebaseAuth.currentUser != null;
+
     //   // Determine if the current route is the splash screen
     //   final isSplashRoute = state.matchedLocation == splashScreenPath;
 
-    //   // Determine if the current route is the authentication screen
+    //   //   // Determine if the current route is the authentication screen
     //   final isAuthRoute = state.matchedLocation == authScreenPath;
 
-    //   // If the user is not logged in and is not already on the authentication screen
-    //   if (!isLoggedIn && !isAuthRoute) {
-    //     // Redirect to the authentication screen
-    //     return authScreenPath;
-    //   }
-    //   // If the user is logged in and is on the splash screen or authentication screen
-    //   else if (isLoggedIn && (isSplashRoute || isAuthRoute)) {
-    //     // final isEmailVerified = firebaseAuth.currentUser!.emailVerified;
-
-    //     // if (!isEmailVerified) {
-    //     //   // Redirect to the email verification screen if email is not verified
-    //     //   return verifyEmailScreenPath;
-    //     // } else {
-    //     //   // Redirect to the home screen if email is verified
-    //     //   return homeScreenPath;
-    //     // }
+    //   if (!isLoggedIn) {
+    //     if (splashScreenBoolean) {
+    //       return authScreenPath;
+    //     }
+    //     return splashScreenPath;
+    //   } else if (isLoggedIn && (isAuthRoute || isSplashRoute)) {
     //     return homeScreenPath;
     //   }
-    //   // No redirection needed, proceed with the current navigation
+
     //   return null;
     // },
-    redirect: (context, state) {
-      // check if the user is logged in
-      final isLoggedIn = firebaseAuth.currentUser != null;
-
-      // Determine if the current route is the splash screen
-      final isSplashRoute = state.matchedLocation == splashScreenPath;
-
-      //   // Determine if the current route is the authentication screen
-      final isAuthRoute = state.matchedLocation == authScreenPath;
-
-      if (!isLoggedIn) {
-        if (splashScreenBoolean) {
-          return authScreenPath;
-        }
-        return splashScreenPath;
-      } else if (isLoggedIn && (isAuthRoute || isSplashRoute)) {
-        return homeScreenPath;
-      }
-
-      // determine if
-      return null;
-    },
 
     // Automatically refresh the router when the Firebase user state changes
     refreshListenable: GoRouterRefreshStream(firebaseAuth.authStateChanges()),
@@ -109,6 +82,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: verifyEmailScreenPath,
         name: AppRoutes.verifyEmailScreen.name,
         builder: (context, state) => const VerifyEmailScreen(),
+      ),
+      GoRoute(
+        path: countrySelectorScreenPath,
+        name: AppRoutes.countrySelectorScreen.name,
+        builder: (context, state) => const CountrySelectorScreen(),
       ),
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
