@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/providers/selected_country_provider.dart';
+import 'package:its_urgent/widgets/confirm_dialog.dart';
 import 'package:its_urgent/widgets/countries_selector_button.dart';
 import 'package:its_urgent/widgets/phone_code_number_form.dart';
 
@@ -15,8 +16,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController _phoneCodeController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
-  _updateButtonState() {
+  void _updateButtonState() {
     setState(() {});
+  }
+
+  void _showAlertDialog(BuildContext context, String phoneNumberString) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmDialog(phoneNumberString: phoneNumberString);
+      },
+    );
   }
 
   @override
@@ -77,7 +87,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               onPressed: selectedCountry != null &&
                       _phoneNumberController.text.isNotEmpty
                   ? () {
-                      print(
+                      _showAlertDialog(context,
                           "+${selectedCountry.phoneCode} ${_phoneNumberController.text}");
                     }
                   : null,
