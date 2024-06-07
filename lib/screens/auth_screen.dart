@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/providers/selected_country_provider.dart';
 import 'package:its_urgent/widgets/countries_selector_button.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -12,6 +13,7 @@ class AuthScreen extends ConsumerStatefulWidget {
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Enter your phone number"),

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/providers/selected_country_provider.dart';
 import 'package:its_urgent/routing/app_router.dart';
 
-class CountrySelectorButton extends StatelessWidget {
+class CountrySelectorButton extends ConsumerWidget {
   const CountrySelectorButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedCountry = ref.watch(selectedCountryProvider);
     return Container(
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
@@ -34,7 +37,8 @@ class CountrySelectorButton extends StatelessWidget {
             style: TextButton.styleFrom(
                 shape: LinearBorder.bottom(), overlayColor: Colors.transparent),
             child: Text(
-              "Choose a country",
+              selectedCountry == null?
+              "Choose a country": selectedCountry.name,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!

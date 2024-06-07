@@ -1,6 +1,12 @@
-import 'package:its_urgent/model/country_code_item.dart';
+
 
 final countries = [
+   {
+    'name': 'United States',
+    'phoneCode': '+1',
+    'countryCode': 'US',
+    'flag': '🇺🇸'
+  },
   {
     'name': 'Afghanistan',
     'phoneCode': '+93',
@@ -776,12 +782,7 @@ final countries = [
     'countryCode': 'GB',
     'flag': '🇬🇧'
   },
-  {
-    'name': 'United States',
-    'phoneCode': '+1',
-    'countryCode': 'US',
-    'flag': '🇺🇸'
-  },
+ 
   {'name': 'Uruguay', 'phoneCode': '+598', 'countryCode': 'UY', 'flag': '🇺🇾'},
   {
     'name': 'Uzbekistan',

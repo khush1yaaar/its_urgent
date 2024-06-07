@@ -11,6 +11,7 @@ class ContrySearchBar extends StatelessWidget {
       onChanged: (value) {
         filter(value);
       },
+      autofocus: true,
       decoration: const InputDecoration(hintText: "Search countries"),
     );
   }
