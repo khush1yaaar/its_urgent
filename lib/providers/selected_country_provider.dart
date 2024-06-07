@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/contants/countries.dart';
 import 'package:its_urgent/model/country_code_item.dart';
 
 class SelectedCountry extends Notifier<CountryCodeItem?> {
@@ -9,6 +10,22 @@ class SelectedCountry extends Notifier<CountryCodeItem?> {
 
   void changeCountry(Map<String, String> data) {
     state = CountryCodeItem.fromJson(data);
+  }
+
+  void changeCountryThroughPhoneCode(String phoneCode) {
+    if (phoneCode.isEmpty) {
+      state = null;
+    } 
+    final Map<String, String> country = countries.firstWhere(
+      (country) => country['phoneCode'] == phoneCode,
+      orElse: () => {'name': "null"}, // Return null if no country is found
+    );
+
+    if (country['name'] == "null") {
+      state = null;
+    } else {
+      changeCountry(country);
+    }
   }
 }
 

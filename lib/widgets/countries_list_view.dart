@@ -43,7 +43,7 @@ class _CountriesListViewState extends ConsumerState<CountriesListView> {
             style: Theme.of(context).textTheme.titleLarge!,
           ),
           trailing: Text(
-            country['phoneCode']!,
+            "+${country['phoneCode']!}",
             style: Theme.of(context).textTheme.bodyLarge!,
           ),
           subtitle: Text(
