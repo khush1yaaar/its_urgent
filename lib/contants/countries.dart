@@ -1,7 +1,5 @@
-
-
 final countries = [
-   {
+  {
     'name': 'United States',
     'phoneCode': '1',
     'countryCode': 'US',
@@ -29,20 +27,10 @@ final countries = [
     'countryCode': 'AG',
     'flag': '🇦🇬'
   },
-  {
-    'name': 'Argentina',
-    'phoneCode': '54',
-    'countryCode': 'AR',
-    'flag': '🇦🇷'
-  },
+  {'name': 'Argentina', 'phoneCode': '54', 'countryCode': 'AR', 'flag': '🇦🇷'},
   {'name': 'Armenia', 'phoneCode': '374', 'countryCode': 'AM', 'flag': '🇦🇲'},
   {'name': 'Aruba', 'phoneCode': '297', 'countryCode': 'AW', 'flag': '🇦🇼'},
-  {
-    'name': 'Australia',
-    'phoneCode': '61',
-    'countryCode': 'AU',
-    'flag': '🇦🇺'
-  },
+  {'name': 'Australia', 'phoneCode': '61', 'countryCode': 'AU', 'flag': '🇦🇺'},
   {'name': 'Austria', 'phoneCode': '43', 'countryCode': 'AT', 'flag': '🇦🇹'},
   {
     'name': 'Azerbaijan',
@@ -86,12 +74,7 @@ final countries = [
     'countryCode': 'BA',
     'flag': '🇧🇦'
   },
-  {
-    'name': 'Botswana',
-    'phoneCode': '267',
-    'countryCode': 'BW',
-    'flag': '🇧🇼'
-  },
+  {'name': 'Botswana', 'phoneCode': '267', 'countryCode': 'BW', 'flag': '🇧🇼'},
   {'name': 'Brazil', 'phoneCode': '55', 'countryCode': 'BR', 'flag': '🇧🇷'},
   {
     'name': 'British Virgin Islands',
@@ -100,30 +83,15 @@ final countries = [
     'flag': '🇻🇬'
   },
   {'name': 'Brunei', 'phoneCode': '673', 'countryCode': 'BN', 'flag': '🇧🇳'},
-  {
-    'name': 'Bulgaria',
-    'phoneCode': '359',
-    'countryCode': 'BG',
-    'flag': '🇧🇬'
-  },
+  {'name': 'Bulgaria', 'phoneCode': '359', 'countryCode': 'BG', 'flag': '🇧🇬'},
   {
     'name': 'Burkina Faso',
     'phoneCode': '226',
     'countryCode': 'BF',
     'flag': '🇧🇫'
   },
-  {
-    'name': 'Cambodia',
-    'phoneCode': '855',
-    'countryCode': 'KH',
-    'flag': '🇰🇭'
-  },
-  {
-    'name': 'Cameroon',
-    'phoneCode': '237',
-    'countryCode': 'CM',
-    'flag': '🇨🇲'
-  },
+  {'name': 'Cambodia', 'phoneCode': '855', 'countryCode': 'KH', 'flag': '🇰🇭'},
+  {'name': 'Cameroon', 'phoneCode': '237', 'countryCode': 'CM', 'flag': '🇨🇲'},
   {'name': 'Canada', 'phoneCode': '1', 'countryCode': 'CA', 'flag': '🇨🇦'},
   {
     'name': 'Cape Verde',
@@ -143,7 +111,7 @@ final countries = [
     'countryCode': 'CF',
     'flag': '🇨🇫'
   },
-  {'name': '3nle', 'phoneCode': '56', 'countryCode': 'CL', 'flag': '🇨🇱'},
+  {'name': 'Chile', 'phoneCode': '56', 'countryCode': 'CL', 'flag': '🇨🇱'},
   {'name': 'Colombia', 'phoneCode': '57', 'countryCode': 'CO', 'flag': '🇨🇴'},
   {'name': 'Comoros', 'phoneCode': '269', 'countryCode': 'KM', 'flag': '🇰🇲'},
   {
@@ -174,12 +142,7 @@ final countries = [
     'flag': '🇨🇩'
   },
   {'name': 'Denmark', 'phoneCode': '45', 'countryCode': 'DK', 'flag': '🇩🇰'},
-  {
-    'name': 'Djibouti',
-    'phoneCode': '253',
-    'countryCode': 'DJ',
-    'flag': '🇩🇯'
-  },
+  {'name': 'Djibouti', 'phoneCode': '253', 'countryCode': 'DJ', 'flag': '🇩🇯'},
   {
     'name': 'Dominica',
     'phoneCode': '1-767',
@@ -224,12 +187,7 @@ final countries = [
     'countryCode': 'GQ',
     'flag': '🇬🇶'
   },
-  {
-    'name': 'Ethiopia',
-    'phoneCode': '251',
-    'countryCode': 'ET',
-    'flag': '🇪🇹'
-  },
+  {'name': 'Ethiopia', 'phoneCode': '251', 'countryCode': 'ET', 'flag': '🇪🇹'},
   {
     'name': 'Falkland Islands',
     'phoneCode': '500',
@@ -302,12 +260,7 @@ final countries = [
   },
   {'name': 'Guyana', 'phoneCode': '592', 'countryCode': 'GY', 'flag': '🇬🇾'},
   {'name': 'Haiti', 'phoneCode': '509', 'countryCode': 'HT', 'flag': '🇭🇹'},
-  {
-    'name': 'Honduras',
-    'phoneCode': '504',
-    'countryCode': 'HN',
-    'flag': '🇭🇳'
-  },
+  {'name': 'Honduras', 'phoneCode': '504', 'countryCode': 'HN', 'flag': '🇭🇳'},
   {
     'name': 'Hong Kong',
     'phoneCode': '852',
@@ -317,12 +270,7 @@ final countries = [
   {'name': 'Hungary', 'phoneCode': '36', 'countryCode': 'HU', 'flag': '🇭🇺'},
   {'name': 'Iceland', 'phoneCode': '354', 'countryCode': 'IS', 'flag': '🇮🇸'},
   {'name': 'India', 'phoneCode': '91', 'countryCode': 'IN', 'flag': '🇮🇳'},
-  {
-    'name': 'Indonesia',
-    'phoneCode': '62',
-    'countryCode': 'ID',
-    'flag': '🇮🇩'
-  },
+  {'name': 'Indonesia', 'phoneCode': '62', 'countryCode': 'ID', 'flag': '🇮🇩'},
   {'name': 'Iran', 'phoneCode': '98', 'countryCode': 'IR', 'flag': '🇮🇷'},
   {'name': 'Iraq', 'phoneCode': '964', 'countryCode': 'IQ', 'flag': '🇮🇶'},
   {'name': 'Ireland', 'phoneCode': '353', 'countryCode': 'IE', 'flag': '🇮🇪'},
@@ -336,19 +284,9 @@ final countries = [
   },
   {'name': 'Japan', 'phoneCode': '81', 'countryCode': 'JP', 'flag': '🇯🇵'},
   {'name': 'Jordan', 'phoneCode': '962', 'countryCode': 'JO', 'flag': '🇯🇴'},
-  {
-    'name': 'Kazakhstan',
-    'phoneCode': '7',
-    'countryCode': 'KZ',
-    'flag': '🇰🇿'
-  },
+  {'name': 'Kazakhstan', 'phoneCode': '7', 'countryCode': 'KZ', 'flag': '🇰🇿'},
   {'name': 'Kenya', 'phoneCode': '254', 'countryCode': 'KE', 'flag': '🇰🇪'},
-  {
-    'name': 'Kiribati',
-    'phoneCode': '686',
-    'countryCode': 'KI',
-    'flag': '🇰🇮'
-  },
+  {'name': 'Kiribati', 'phoneCode': '686', 'countryCode': 'KI', 'flag': '🇰🇮'},
   {'name': 'Kosovo', 'phoneCode': '383', 'countryCode': 'XK', 'flag': '🇽🇰'},
   {'name': 'Kuwait', 'phoneCode': '965', 'countryCode': 'KW', 'flag': '🇰🇼'},
   {
@@ -396,12 +334,7 @@ final countries = [
   },
   {'name': 'Malawi', 'phoneCode': '265', 'countryCode': 'MW', 'flag': '🇲🇼'},
   {'name': 'Malaysia', 'phoneCode': '60', 'countryCode': 'MY', 'flag': '🇲🇾'},
-  {
-    'name': 'Maldives',
-    'phoneCode': '960',
-    'countryCode': 'MV',
-    'flag': '🇲🇻'
-  },
+  {'name': 'Maldives', 'phoneCode': '960', 'countryCode': 'MV', 'flag': '🇲🇻'},
   {'name': 'Mali', 'phoneCode': '223', 'countryCode': 'ML', 'flag': '🇲🇱'},
   {'name': 'Malta', 'phoneCode': '356', 'countryCode': 'MT', 'flag': '🇲🇹'},
   {
@@ -438,12 +371,7 @@ final countries = [
   },
   {'name': 'Moldova', 'phoneCode': '373', 'countryCode': 'MD', 'flag': '🇲🇩'},
   {'name': 'Monaco', 'phoneCode': '377', 'countryCode': 'MC', 'flag': '🇲🇨'},
-  {
-    'name': 'Mongolia',
-    'phoneCode': '976',
-    'countryCode': 'MN',
-    'flag': '🇲🇳'
-  },
+  {'name': 'Mongolia', 'phoneCode': '976', 'countryCode': 'MN', 'flag': '🇲🇳'},
   {
     'name': 'Montenegro',
     'phoneCode': '382',
@@ -529,12 +457,7 @@ final countries = [
     'countryCode': 'PG',
     'flag': '🇵🇬'
   },
-  {
-    'name': 'Paraguay',
-    'phoneCode': '595',
-    'countryCode': 'PY',
-    'flag': '🇵🇾'
-  },
+  {'name': 'Paraguay', 'phoneCode': '595', 'countryCode': 'PY', 'flag': '🇵🇾'},
   {'name': 'Peru', 'phoneCode': '51', 'countryCode': 'PE', 'flag': '🇵🇪'},
   {
     'name': 'Philippines',
@@ -543,12 +466,7 @@ final countries = [
     'flag': '🇵🇭'
   },
   {'name': 'Poland', 'phoneCode': '48', 'countryCode': 'PL', 'flag': '🇵🇱'},
-  {
-    'name': 'Portugal',
-    'phoneCode': '351',
-    'countryCode': 'PT',
-    'flag': '🇵🇹'
-  },
+  {'name': 'Portugal', 'phoneCode': '351', 'countryCode': 'PT', 'flag': '🇵🇹'},
   {
     'name': 'Puerto Rico',
     'phoneCode': '1-787',
@@ -647,30 +565,15 @@ final countries = [
     'countryCode': 'SL',
     'flag': '🇸🇱'
   },
-  {
-    'name': 'Singapore',
-    'phoneCode': '65',
-    'countryCode': 'SG',
-    'flag': '🇸🇬'
-  },
+  {'name': 'Singapore', 'phoneCode': '65', 'countryCode': 'SG', 'flag': '🇸🇬'},
   {
     'name': 'Sint Maarten',
     'phoneCode': '1-721',
     'countryCode': 'SX',
     'flag': '🇸🇽'
   },
-  {
-    'name': 'Slovakia',
-    'phoneCode': '421',
-    'countryCode': 'SK',
-    'flag': '🇸🇰'
-  },
-  {
-    'name': 'Slovenia',
-    'phoneCode': '386',
-    'countryCode': 'SI',
-    'flag': '🇸🇮'
-  },
+  {'name': 'Slovakia', 'phoneCode': '421', 'countryCode': 'SK', 'flag': '🇸🇰'},
+  {'name': 'Slovenia', 'phoneCode': '386', 'countryCode': 'SI', 'flag': '🇸🇮'},
   {
     'name': 'Solomon Islands',
     'phoneCode': '677',
@@ -697,19 +600,9 @@ final countries = [
     'flag': '🇸🇸'
   },
   {'name': 'Spain', 'phoneCode': '34', 'countryCode': 'ES', 'flag': '🇪🇸'},
-  {
-    'name': 'Sri Lanka',
-    'phoneCode': '94',
-    'countryCode': 'LK',
-    'flag': '🇱🇰'
-  },
+  {'name': 'Sri Lanka', 'phoneCode': '94', 'countryCode': 'LK', 'flag': '🇱🇰'},
   {'name': 'Sudan', 'phoneCode': '249', 'countryCode': 'SD', 'flag': '🇸🇩'},
-  {
-    'name': 'Suriname',
-    'phoneCode': '597',
-    'countryCode': 'SR',
-    'flag': '🇸🇷'
-  },
+  {'name': 'Suriname', 'phoneCode': '597', 'countryCode': 'SR', 'flag': '🇸🇷'},
   {
     'name': 'Swaziland',
     'phoneCode': '268',
@@ -731,12 +624,7 @@ final countries = [
     'countryCode': 'TJ',
     'flag': '🇹🇯'
   },
-  {
-    'name': 'Tanzania',
-    'phoneCode': '255',
-    'countryCode': 'TZ',
-    'flag': '🇹🇿'
-  },
+  {'name': 'Tanzania', 'phoneCode': '255', 'countryCode': 'TZ', 'flag': '🇹🇿'},
   {'name': 'Thailand', 'phoneCode': '66', 'countryCode': 'TH', 'flag': '🇹🇭'},
   {
     'name': 'Timor-Leste',
@@ -782,7 +670,6 @@ final countries = [
     'countryCode': 'GB',
     'flag': '🇬🇧'
   },
- 
   {'name': 'Uruguay', 'phoneCode': '598', 'countryCode': 'UY', 'flag': '🇺🇾'},
   {
     'name': 'Uzbekistan',
@@ -792,12 +679,7 @@ final countries = [
   },
   {'name': 'Vanuatu', 'phoneCode': '678', 'countryCode': 'VU', 'flag': '🇻🇺'},
   {'name': 'Vatican', 'phoneCode': '379', 'countryCode': 'VA', 'flag': '🇻🇦'},
-  {
-    'name': 'Venezuela',
-    'phoneCode': '58',
-    'countryCode': 'VE',
-    'flag': '🇻🇪'
-  },
+  {'name': 'Venezuela', 'phoneCode': '58', 'countryCode': 'VE', 'flag': '🇻🇪'},
   {'name': 'Vietnam', 'phoneCode': '84', 'countryCode': 'VN', 'flag': '🇻🇳'},
   {
     'name': 'Wallis and Futuna',
@@ -815,4 +697,3 @@ final countries = [
   {'name': 'Zambia', 'phoneCode': '260', 'countryCode': 'ZM', 'flag': '🇿🇲'},
   {'name': 'Zimbabwe', 'phoneCode': '263', 'countryCode': 'ZW', 'flag': '🇿🇼'}
 ];
-

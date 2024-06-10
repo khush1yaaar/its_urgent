@@ -11,6 +11,11 @@ import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
 import 'package:its_urgent/screens/verify_phone_number_screen.dart';
 
+// const path parameters name
+enum PathParams {
+  phoneNumber,
+}
+
 // enum for named routes
 enum AppRoutes {
   splashScreen,
@@ -29,7 +34,7 @@ const splashScreenPath = '/';
 const errorScreenPath = '/errorScreen';
 const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
-const smsCodeScreenPath = 'smsCodeScreen';
+final smsCodeScreenPath = 'smsCodeScreen/:${PathParams.phoneNumber.name}';
 
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -40,6 +45,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   // TODO - set the routing logic back to normal
   return GoRouter(
     initialLocation: splashScreenPath,
+    // initialLocation: "$authScreenPath/$smsCodeScreenPath",
     debugLogDiagnostics: true,
     redirect: (context, state) {
       // check if the user is logged in
@@ -89,7 +95,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             GoRoute(
               path: smsCodeScreenPath,
               name: AppRoutes.smsCodeScreen.name,
-              builder: (context, state) => const VerifyPhoneNumberScreen(),
+              builder: (context, state) {
+                final phoneNumber = state.pathParameters[PathParams.phoneNumber.name]!;
+                return VerifyPhoneNumberScreen(phoneNumber: phoneNumber);
+              },
             ),
           ]),
       GoRoute(

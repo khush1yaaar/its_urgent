@@ -27,15 +27,16 @@ class ConfirmDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: const Text('Edit'),
-          onPressed: () {
-            
-          },
+          onPressed: () {},
         ),
         TextButton(
           child: const Text('Confirm'),
           onPressed: () {
             context.pop();
-            context.goNamed(AppRoutes.smsCodeScreen.name);
+            context.goNamed(
+              AppRoutes.smsCodeScreen.name,
+              pathParameters: {PathParams.phoneNumber.name: "+91 1234567890"},
+            );
           },
         ),
       ],
