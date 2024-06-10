@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/model/country_code_item.dart';
 import 'package:its_urgent/providers/selected_country_provider.dart';
 
-class PhoneCodeNumberForm extends ConsumerWidget {
-  const PhoneCodeNumberForm({
+class PhoneNumberForm extends ConsumerWidget {
+  const PhoneNumberForm({
     super.key,
     required this.size,
     required this.selectedCountry,
     required TextEditingController phoneCodeController,
     required TextEditingController phoneNumberController,
+   
   })  : _phoneCodeController = phoneCodeController,
         _phoneNumberController = phoneNumberController;
 
@@ -19,6 +20,7 @@ class PhoneCodeNumberForm extends ConsumerWidget {
   final CountryCodeItem? selectedCountry;
   final TextEditingController _phoneNumberController;
   final TextEditingController _phoneCodeController;
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,10 +83,23 @@ class PhoneCodeNumberForm extends ConsumerWidget {
             inputFormatters: [
               LengthLimitingTextInputFormatter(17),
               FilteringTextInputFormatter.digitsOnly,
-              // PhoneInputFormatter(
-              //   allowEndlessPhone: false,
-              //   defaultCountryCode: selectedCountry?.countryCode,
-              // ),
+              LibPhonenumberTextFormatter(
+                country: ref.watch(selectedCountryWithPhoneCodeProvider),
+
+                // example for an indian phone number
+                // country: CountryWithPhoneCode(
+                //     countryName: "India",
+                //     countryCode: "IN",
+                //     phoneCode: "91",
+                //     exampleNumberMobileNational: "081234 56789",
+                //     exampleNumberFixedLineNational: "074104 10123",
+                //     phoneMaskMobileNational: "000000 00000",
+                //     phoneMaskFixedLineNational: "000000 00000",
+                //     exampleNumberMobileInternational: "+91 81234 56789",
+                //     exampleNumberFixedLineInternational: "+91 74104 10123",
+                //     phoneMaskMobileInternational: "+00 00000 00000",
+                //     phoneMaskFixedLineInternational: "+00 00000 00000"),
+              )
             ],
             keyboardType: TextInputType.phone,
           ),

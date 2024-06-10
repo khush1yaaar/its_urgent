@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/providers/selected_country_provider.dart';
 import 'package:its_urgent/widgets/confirm_dialog.dart';
 import 'package:its_urgent/widgets/countries_selector_button.dart';
-import 'package:its_urgent/widgets/phone_code_number_form.dart';
+import 'package:its_urgent/widgets/phone_number_form.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -15,16 +16,23 @@ class AuthScreen extends ConsumerStatefulWidget {
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController _phoneCodeController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+ 
 
   void _updateButtonState() {
     setState(() {});
   }
 
-  void _showAlertDialog(BuildContext context, String phoneCode, String phoneNumber) {
+  
+
+  void _showAlertDialog(
+      BuildContext context, String phoneCode, String phoneNumber) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ConfirmDialog(phoneCode: phoneCode, phoneNumber: phoneNumber,);
+        return ConfirmDialog(
+          phoneCode: phoneCode,
+          phoneNumber: phoneNumber,
+        );
       },
     );
   }
@@ -32,8 +40,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    
     _phoneNumberController.addListener(_updateButtonState);
   }
+
+
 
   @override
   void dispose() {
@@ -74,7 +85,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     height: 8,
                   ),
                   const CountrySelectorButton(),
-                  PhoneCodeNumberForm(
+                  PhoneNumberForm(
                     size: size,
                     selectedCountry: selectedCountry,
                     phoneCodeController: _phoneCodeController,
@@ -87,8 +98,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               onPressed: selectedCountry != null &&
                       _phoneNumberController.text.isNotEmpty
                   ? () {
-                      _showAlertDialog(context,
-                          "+${selectedCountry.phoneCode}", _phoneNumberController.text);
+                      _showAlertDialog(context, "+${selectedCountry.phoneCode}",
+                          _phoneNumberController.text);
                     }
                   : null,
               style: ElevatedButton.styleFrom(
