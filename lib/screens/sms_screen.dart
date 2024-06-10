@@ -1,20 +1,23 @@
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/providers/firebase_auth_provider.dart';
 import 'package:its_urgent/widgets/pinput_constants.dart';
 import 'package:pinput/pinput.dart';
 
-class VerifyPhoneNumberScreen extends StatefulWidget {
-  const VerifyPhoneNumberScreen({super.key, required this.phoneNumber});
+class SmsScreen extends ConsumerStatefulWidget {
+  const SmsScreen(
+      {super.key, required this.phoneNumber, required this.verificationId});
   final String phoneNumber;
+  final String verificationId;
 
   @override
-  State<VerifyPhoneNumberScreen> createState() =>
-      _VerifyPhoneNumberScreenState();
+  ConsumerState<SmsScreen> createState() => _SmsScreenState();
 }
 
-class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen> {
+class _SmsScreenState extends ConsumerState<SmsScreen> {
   String _progressOrErrorText = "";
+  String _otpCode = "";
   final controller = TextEditingController();
   final focusNode = FocusNode();
 
@@ -27,6 +30,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.verificationId);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verifying you number"),
@@ -50,6 +54,12 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen> {
                     height: 24,
                   ),
                   Pinput(
+                    
+                    onChanged: (value) {
+                      setState(() {
+                        _otpCode = value;
+                      });
+                    },
                     autofocus: true,
                     focusNode: focusNode,
                     controller: controller,
@@ -80,7 +90,13 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: _otpCode.length != 6
+                  ? null
+                  : () {
+                      ref
+                          .read(phoneAuthProvider)
+                          .verifyOtp(widget.verificationId, _otpCode);
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                 foregroundColor:

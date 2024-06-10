@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:its_urgent/routing/app_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/providers/firebase_auth_provider.dart';
 
-class ConfirmDialog extends StatelessWidget {
+class ConfirmDialog extends ConsumerWidget {
   const ConfirmDialog({
     super.key,
-    required this.phoneNumberString,
+    required this.phoneCode,
+    required this.phoneNumber,
   });
 
-  final String phoneNumberString;
+  final String phoneCode;
+  final String phoneNumber;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: Text(
         'Is this the correct number',
@@ -21,7 +23,7 @@ class ConfirmDialog extends StatelessWidget {
             .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
       content: Text(
-        phoneNumberString,
+        "$phoneCode $phoneNumber",
         style: Theme.of(context).textTheme.headlineSmall,
       ),
       actions: <Widget>[
@@ -31,12 +33,16 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           child: const Text('Confirm'),
-          onPressed: () {
-            context.pop();
-            context.goNamed(
-              AppRoutes.smsCodeScreen.name,
-              pathParameters: {PathParams.phoneNumber.name: "+91 1234567890"},
-            );
+          onPressed: () async {
+            print("$phoneCode$phoneNumber");
+            await ref
+                .read(phoneAuthProvider)
+                .phoneAuthentication(context, phoneCode, phoneNumber.trim());
+
+            // context.goNamed(
+            //   AppRoutes.smsCodeScreen.name,
+            //   pathParameters: {PathParams.phoneNumber.name: "$phoneCode $phoneNumber"},
+            // );
           },
         ),
       ],

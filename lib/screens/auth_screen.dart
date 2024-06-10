@@ -20,11 +20,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     setState(() {});
   }
 
-  void _showAlertDialog(BuildContext context, String phoneNumberString) {
+  void _showAlertDialog(BuildContext context, String phoneCode, String phoneNumber) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ConfirmDialog(phoneNumberString: phoneNumberString);
+        return ConfirmDialog(phoneCode: phoneCode, phoneNumber: phoneNumber,);
       },
     );
   }
@@ -88,7 +88,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       _phoneNumberController.text.isNotEmpty
                   ? () {
                       _showAlertDialog(context,
-                          "+${selectedCountry.phoneCode} ${_phoneNumberController.text}");
+                          "+${selectedCountry.phoneCode}", _phoneNumberController.text);
                     }
                   : null,
               style: ElevatedButton.styleFrom(

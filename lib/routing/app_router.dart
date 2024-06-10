@@ -9,11 +9,12 @@ import 'package:its_urgent/screens/country_selector_screen.dart';
 import 'package:its_urgent/screens/email_verification.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
-import 'package:its_urgent/screens/verify_phone_number_screen.dart';
+import 'package:its_urgent/screens/sms_screen.dart';
 
 // const path parameters name
 enum PathParams {
   phoneNumber,
+  verificationId,
 }
 
 // enum for named routes
@@ -34,7 +35,8 @@ const splashScreenPath = '/';
 const errorScreenPath = '/errorScreen';
 const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
-final smsCodeScreenPath = 'smsCodeScreen/:${PathParams.phoneNumber.name}';
+final smsCodeScreenPath =
+    'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
 
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -55,14 +57,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isSplashRoute = state.matchedLocation == splashScreenPath;
 
       //   // Determine if the current route is the authentication screen
-      final isAuthRoute = state.matchedLocation == authScreenPath;
+      final isHomeScreenPath = state.matchedLocation == homeScreenPath;
 
       if (!isLoggedIn) {
-        if (splashScreenBoolean && isSplashRoute) {
+        if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
           return authScreenPath;
         } else if (splashScreenBoolean &&
             state.matchedLocation.startsWith(authScreenPath)) {
-          return state.matchedLocation;
+          return state.matchedLocation; // for verification sms screen
         } else if (!splashScreenBoolean) {
           return splashScreenPath;
         }
@@ -96,8 +98,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               path: smsCodeScreenPath,
               name: AppRoutes.smsCodeScreen.name,
               builder: (context, state) {
-                final phoneNumber = state.pathParameters[PathParams.phoneNumber.name]!;
-                return VerifyPhoneNumberScreen(phoneNumber: phoneNumber);
+                final phoneNumber =
+                    state.pathParameters[PathParams.phoneNumber.name]!;
+                final verificationId =
+                    state.pathParameters[PathParams.verificationId.name]!;
+                return SmsScreen(phoneNumber: phoneNumber, verificationId: verificationId,);
               },
             ),
           ]),
