@@ -6,6 +6,7 @@ import 'package:its_urgent/providers/splash_screen_provider.dart';
 import 'package:its_urgent/screens/auth_screen.dart';
 import 'package:its_urgent/screens/common/error_screen.dart';
 import 'package:its_urgent/screens/country_selector_screen.dart';
+import 'package:its_urgent/screens/edit_profile_screen.dart';
 import 'package:its_urgent/screens/email_verification.dart';
 import 'package:its_urgent/screens/home_screen.dart';
 import 'package:its_urgent/screens/splash_screen.dart';
@@ -26,6 +27,7 @@ enum AppRoutes {
   verifyEmailScreen,
   countrySelectorScreen,
   smsCodeScreen,
+  editProfileScreen,
 }
 
 // Const route paths
@@ -37,7 +39,7 @@ const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
-
+final editProfileScreenPath = '/editProfileSceenPath';
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
   // Get the instance of FirebaseAuth
@@ -69,13 +71,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return splashScreenPath;
         }
       } else if (isLoggedIn &&
-          state.matchedLocation.startsWith(authScreenPath)) {
+          (state.matchedLocation.startsWith(authScreenPath) || isSplashRoute)) {
         return homeScreenPath;
+        // editprofile screen path;
       }
+      // else if (is logged && (is splash route or edit profile screen route) ) => homne screen path
 
       return null;
     },
-    
+
     // Automatically refresh the router when the Firebase user state changes
     refreshListenable: GoRouterRefreshStream(firebaseAuth.authStateChanges()),
     routes: [
@@ -102,7 +106,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                     state.pathParameters[PathParams.phoneNumber.name]!;
                 final verificationId =
                     state.pathParameters[PathParams.verificationId.name]!;
-                return SmsScreen(phoneNumber: phoneNumber, verificationId: verificationId,);
+                return SmsScreen(
+                  phoneNumber: phoneNumber,
+                  verificationId: verificationId,
+                );
               },
             ),
           ]),
@@ -116,6 +123,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.countrySelectorScreen.name,
         builder: (context, state) => const CountrySelectorScreen(),
       ),
+      GoRoute(
+        path: editProfileScreenPath,
+        name: AppRoutes.editProfileScreen.name,
+        builder: (context, state) => const EditProfileScreen(),
+      )
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
   );
