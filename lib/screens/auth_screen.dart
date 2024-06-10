@@ -16,22 +16,29 @@ class AuthScreen extends ConsumerStatefulWidget {
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   final TextEditingController _phoneCodeController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
- 
 
   void _updateButtonState() {
     setState(() {});
   }
 
-  
-
   void _showAlertDialog(
-      BuildContext context, String phoneCode, String phoneNumber) {
+      BuildContext context, String phoneCode, String phoneNumber) async {
+    bool wrongNumberFormat = true;
+    try {
+      await parse("+$phoneCode$phoneNumber");
+      wrongNumberFormat = false;
+    } catch (e) {
+      print(e.toString());
+      wrongNumberFormat = true;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return ConfirmDialog(
           phoneCode: phoneCode,
           phoneNumber: phoneNumber,
+          isWrongNumberFormat: wrongNumberFormat,
         );
       },
     );
@@ -40,11 +47,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     _phoneNumberController.addListener(_updateButtonState);
   }
-
-
 
   @override
   void dispose() {
