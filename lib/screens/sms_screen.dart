@@ -20,6 +20,28 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
   String _otpCode = "";
   final controller = TextEditingController();
   final focusNode = FocusNode();
+  bool _isLoading = false;
+
+  Future<void> _verifyOtp() async {
+    setState(() {
+      _isLoading = true;
+      _progressOrErrorText = "Verifying...";
+    });
+
+    final result = await ref
+        .read(phoneAuthProvider)
+        .verifyOtp(widget.verificationId, _otpCode);
+
+    setState(() {
+      _isLoading = false;
+      if (result == true) {
+        _progressOrErrorText = "Verification successful!";
+      } else {
+        _progressOrErrorText = result.toString();
+        focusNode.requestFocus();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -30,7 +52,6 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.verificationId);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verifying you number"),
@@ -53,24 +74,38 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
                   const SizedBox(
                     height: 24,
                   ),
-                  Pinput(
-                    
-                    onChanged: (value) {
-                      setState(() {
-                        _otpCode = value;
-                      });
-                    },
-                    autofocus: true,
-                    focusNode: focusNode,
-                    controller: controller,
-                    length: 6,
-                    cursor: pinputCursor(context),
-                    defaultPinTheme: pinputPinTheme(context),
-                    pinAnimationType: PinAnimationType.slide,
-                    preFilledWidget: pinputPreFilledWidget(),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                  Container(
+                    width: 243,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Pinput(
+                      onChanged: (value) {
+                        setState(() {
+                          _otpCode = value;
+                        });
+                      },
+                      separatorBuilder: (index) => Container(
+                        height: 64,
+                        width: 1,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      focusedPinTheme: pinputPinTheme(context).copyWith(
+                        decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer),
+                      ),
+                      autofocus: true,
+                      focusNode: focusNode,
+                      controller: controller,
+                      length: 6,
+                      defaultPinTheme: pinputPinTheme(context),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 16,
@@ -80,29 +115,30 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
                     child: Text(
                       _progressOrErrorText,
                       textAlign: TextAlign.start,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: Theme.of(context).colorScheme.error),
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: _isLoading
+                              ? Theme.of(context).colorScheme.onSurface
+                              : Theme.of(context).colorScheme.error),
                     ),
                   )
                 ],
               ),
             ),
             ElevatedButton(
-              onPressed: _otpCode.length != 6
-                  ? null
-                  : () {
-                      ref
-                          .read(phoneAuthProvider)
-                          .verifyOtp(widget.verificationId, _otpCode);
-                    },
+              onPressed: _otpCode.length != 6 || _isLoading ? null : _verifyOtp,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                 foregroundColor:
                     Theme.of(context).colorScheme.onPrimaryContainer,
               ),
-              child: const Text("Verify"),
+              child: _isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                      ),
+                    )
+                  : const Text("Verify"),
             ),
           ],
         ),

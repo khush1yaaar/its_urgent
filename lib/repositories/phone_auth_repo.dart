@@ -48,7 +48,7 @@ class PhoneAuthRepo {
       );
       return userCredential.user != null;
     } on FirebaseAuthException catch (e) {
-      print(e.message);
+    
       return e.message;
     }
   }

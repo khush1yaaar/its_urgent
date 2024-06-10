@@ -75,7 +75,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       return null;
     },
-
+    
     // Automatically refresh the router when the Firebase user state changes
     refreshListenable: GoRouterRefreshStream(firebaseAuth.authStateChanges()),
     routes: [
