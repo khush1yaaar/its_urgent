@@ -39,43 +39,41 @@ const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
-final editProfileScreenPath = '/editProfileSceenPath';
+const editProfileScreenPath = '/editProfileScreen';
+
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
   // Get the instance of FirebaseAuth
   final firebaseAuth = ref.watch(firebaseAuthProvider);
   final splashScreenBoolean = ref.watch(splashScreenBooleanProvider);
 
-  // TODO - set the routing logic back to normal
   return GoRouter(
     initialLocation: splashScreenPath,
     // initialLocation: "$authScreenPath/$smsCodeScreenPath",
     debugLogDiagnostics: true,
     redirect: (context, state) {
-      // check if the user is logged in
       final isLoggedIn = firebaseAuth.currentUser != null;
-
-      // Determine if the current route is the splash screen
       final isSplashRoute = state.matchedLocation == splashScreenPath;
-
-      //   // Determine if the current route is the authentication screen
       final isHomeScreenPath = state.matchedLocation == homeScreenPath;
+      final isEditProfileScreenPath =
+          state.matchedLocation == editProfileScreenPath;
+      final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
 
       if (!isLoggedIn) {
         if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
           return authScreenPath;
-        } else if (splashScreenBoolean &&
-            state.matchedLocation.startsWith(authScreenPath)) {
-          return state.matchedLocation; // for verification sms screen
+        } else if (splashScreenBoolean && isAuthScreenPath) {
+          return state.matchedLocation;
         } else if (!splashScreenBoolean) {
           return splashScreenPath;
         }
-      } else if (isLoggedIn &&
-          (state.matchedLocation.startsWith(authScreenPath) || isSplashRoute)) {
-        return homeScreenPath;
-        // editprofile screen path;
+      } else {
+        if (isAuthScreenPath) {
+          return editProfileScreenPath;
+        } else if (isSplashRoute) {
+          return homeScreenPath;
+        }
       }
-      // else if (is logged && (is splash route or edit profile screen route) ) => homne screen path
 
       return null;
     },

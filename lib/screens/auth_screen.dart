@@ -73,7 +73,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
