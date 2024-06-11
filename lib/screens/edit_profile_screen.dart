@@ -73,7 +73,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         _isErrorUploading = false;
       });
       if (context.mounted) {
-        context.pushReplacementNamed(AppRoutes.homeScreen.name);
+        context.goNamed(AppRoutes.homeScreen.name);
       }
     } catch (e) {
       setState(() {
