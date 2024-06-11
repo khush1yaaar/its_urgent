@@ -84,7 +84,7 @@ class SelectedCountryWithPhoneCode extends Notifier<CountryWithPhoneCode> {
       state = res[countryCodeItem.countryCode]!;
     }
     // print for debugging purposes
-    print(state);
+   
   }
 }
 

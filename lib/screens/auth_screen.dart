@@ -28,7 +28,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       await parse("+$phoneCode$phoneNumber");
       wrongNumberFormat = false;
     } catch (e) {
-      print(e.toString());
+      
       wrongNumberFormat = true;
     }
 

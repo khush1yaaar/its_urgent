@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:its_urgent/helpers/go_router_refresh_stream.dart';
+import 'package:its_urgent/providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/providers/firebase_auth_provider.dart';
 import 'package:its_urgent/providers/splash_screen_provider.dart';
 import 'package:its_urgent/screens/auth_screen.dart';
@@ -41,6 +43,7 @@ const editProfileScreenPath = '/editProfileScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
 
+int appRedirectCount = 0;
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
   // Get the instance of FirebaseAuth
@@ -51,28 +54,67 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: splashScreenPath,
 
     debugLogDiagnostics: true,
-    redirect: (context, state) {
+    redirectLimit: 1,
+    redirect: (context, state) async {
+      if (kDebugMode) {
+        debugPrint(
+            "\n<----- calling redirect function for the  ${++appRedirectCount} ------>");
+        debugPrint("current route BEFORE logic is: ${state.matchedLocation}");
+      }
+
       final isLoggedIn = firebaseAuth.currentUser != null;
       final isSplashRoute = state.matchedLocation == splashScreenPath;
       final isHomeScreenPath = state.matchedLocation == homeScreenPath;
       final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
 
+      print("Is logged IN; $isLoggedIn");
+
       if (!isLoggedIn) {
+        debugPrint("We have entered now in not isLoggedIn.....");
+        debugPrint("current route AFTER logic is: ${state.matchedLocation}");
         if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
-          return authScreenPath;
+          if (state.matchedLocation != authScreenPath) {
+            debugPrint("We have entered now in authscreepath");
+            debugPrint(
+                "current route AFTER logic is: ${state.matchedLocation}");
+            return authScreenPath;
+          }
         } else if (splashScreenBoolean && isAuthScreenPath) {
+          debugPrint(
+              "We have entered now in state.matched location - verification screen");
+          debugPrint("current route AFTER logic is: ${state.matchedLocation}");
           return state.matchedLocation;
         } else if (!splashScreenBoolean) {
-          return splashScreenPath;
+          if (state.matchedLocation != splashScreenPath) {
+            debugPrint("We have entered now in splashscreen path");
+            debugPrint(
+                "current route AFTER logic is: ${state.matchedLocation}");
+            return splashScreenPath;
+          }
         }
       } else {
-        if (isAuthScreenPath) {
-          return editProfileScreenPath;
+        debugPrint("isLoggedIn.....");
+        final isUserProfileExists = await ref
+            .read(cloudFirestoreProvider)
+            .checkForExistingUserData(firebaseAuth.currentUser!.uid);
+        if (isAuthScreenPath || !isUserProfileExists) {
+          if (state.matchedLocation != editProfileScreenPath) {
+            debugPrint("We have entered now in editProfileScreen");
+            debugPrint(
+                "current route AFTER logic is: ${state.matchedLocation}");
+            return editProfileScreenPath;
+          }
         } else if (isSplashRoute) {
-          return homeScreenPath;
+          if (state.matchedLocation != homeScreenPath) {
+            debugPrint("We have entered now in homescreen");
+            debugPrint(
+                "current route AFTER logic is: ${state.matchedLocation}");
+            return homeScreenPath;
+          }
         }
       }
-
+      debugPrint("Now just normal routing occurs");
+      debugPrint("current route AFTER logic is: ${state.matchedLocation}");
       return null;
     },
 

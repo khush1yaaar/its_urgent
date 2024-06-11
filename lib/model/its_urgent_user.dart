@@ -5,7 +5,15 @@ class ItsUrgentUser {
 
   ItsUrgentUser({required this.name, required this.imageUrl});
 
-  static ItsUrgentUser fromJson(Map<String, String> data) {
+  @override
+  String toString() {
+    return 
+    """
+    ItsUrgentUser(name: "$name", imageUrl: "$imageUrl")
+    """;
+  }
+
+  static ItsUrgentUser fromJson(Map<String, dynamic> data) {
     return ItsUrgentUser(
       name: data['name']!,
       imageUrl: data['imageUrl']!,

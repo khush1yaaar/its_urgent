@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:its_urgent/constants/default_profile_image.dart';
 import 'package:its_urgent/providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/providers/firebase_auth_provider.dart';
 import 'package:its_urgent/providers/firebase_storeage_provider.dart';
+import 'package:its_urgent/providers/its_urgent_user_provider.dart';
 import 'package:its_urgent/routing/app_router.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -20,7 +22,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   String _nameString = "";
   String? _errorText;
+  String? _uploadErrorText;
   XFile? _imageFile;
+  bool _isErrorUploading = false;
+  String? _currentUserImageUrl;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -33,6 +38,63 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     }
   }
 
+  void _updateProfile(BuildContext context) async {
+    try {
+      setState(() {
+        _uploadErrorText = "Uploading data...";
+        _isErrorUploading = false;
+      });
+      // Replace this with the actual UID of the user
+      final String uid = ref.read(firebaseAuthProvider).currentUser!.uid;
+
+      // Get the FirebaseStorageRepo and CloudFirestoreRepo from Riverpod
+      final firebaseStorageRepo = ref.read(firebaseStorageProvider);
+      final cloudFirestoreRepo = ref.read(cloudFirestoreProvider);
+
+      String imageUrl;
+      // Step 1: if no image is selected directly uses the link of ui avatar, no need to upload it to the firebase storage.
+      if (_imageFile != null) {
+        imageUrl =
+            await firebaseStorageRepo.getImageUrl(uid, File(_imageFile!.path));
+      } else {
+        if (_currentUserImageUrl != null) {
+          imageUrl = _currentUserImageUrl!;
+        } else {
+          imageUrl = kimageURL;
+        }
+      }
+
+      // Step 2: Add or update the user data in Firestore
+      await cloudFirestoreRepo.addUser(
+          uid: uid, name: _nameString, imageUrl: imageUrl);
+
+      setState(() {
+        _uploadErrorText = "Profile Updated successfully";
+        _isErrorUploading = false;
+      });
+      if (context.mounted) {
+        context.pushReplacementNamed(AppRoutes.homeScreen.name);
+      }
+    } catch (e) {
+      setState(() {
+        _uploadErrorText = e.toString();
+        _isErrorUploading = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the current user's name and set it as the initial value of the controller
+    final currentUser = ref.read(itsUrgentUserProvider);
+    if (currentUser != null) {
+      _nameString = currentUser.name;
+      _nameController.text = _nameString;
+      _currentUserImageUrl = currentUser.imageUrl;
+    }
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -42,6 +104,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile Info"),
@@ -72,10 +135,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       backgroundColor: _nameString.isEmpty
                           ? Theme.of(context).colorScheme.primaryContainer
                           : Colors.transparent,
-                      backgroundImage: _nameString.isEmpty || _imageFile != null
-                          ? null
-                          : NetworkImage(
-                              "https://ui-avatars.com/api/?name=${_nameString}&background=random&size=256"),
+                      backgroundImage: _currentUserImageUrl != null
+                          ? NetworkImage(_currentUserImageUrl!)
+                          : const AssetImage("assets/profile.jpg"),
                       foregroundImage: _imageFile != null
                           ? FileImage(File(_imageFile!.path))
                           : null,
@@ -137,6 +199,26 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       decoration: InputDecoration(
                           hintText: "Name", errorText: _errorText),
                     ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    if (_uploadErrorText != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          _uploadErrorText!,
+                          textAlign: TextAlign.start,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  color: _isErrorUploading
+                                      ? Theme.of(context).colorScheme.error
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -144,14 +226,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ElevatedButton(
               onPressed: _nameString.length < 2
                   ? null
-                  : () async {
-                      final res = await ref
-                          .watch(firebaseStorageProvider)
-                          .getImageUrl(
-                              ref.watch(firebaseAuthProvider).currentUser!.uid,
-                              File(_imageFile!.path));
-                      print(res);
-                      // context.pushReplacementNamed(AppRoutes.homeScreen.name);
+                  : () {
+                      _updateProfile(context);
                     },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
