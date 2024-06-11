@@ -1,6 +1,6 @@
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/contants/countries.dart';
+import 'package:its_urgent/constants/countries.dart';
 import 'package:its_urgent/model/country_code_item.dart';
 
 /// 1.selectedCountry Notifier & NotifierProvider

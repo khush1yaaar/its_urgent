@@ -24,7 +24,7 @@ enum AppRoutes {
   homeScreen,
   authScreen,
   errorScreen,
-  verifyEmailScreen,
+  // verifyEmailScreen,
   countrySelectorScreen,
   smsCodeScreen,
   editProfileScreen,
@@ -35,11 +35,11 @@ const authScreenPath = '/authScreen';
 const homeScreenPath = '/homeScreen';
 const splashScreenPath = '/';
 const errorScreenPath = '/errorScreen';
-const verifyEmailScreenPath = '/verifyEmailScreen';
+// const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
+const editProfileScreenPath = '/editProfileScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
-const editProfileScreenPath = '/editProfileScreen';
 
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -49,14 +49,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: splashScreenPath,
-    // initialLocation: "$authScreenPath/$smsCodeScreenPath",
+
     debugLogDiagnostics: true,
     redirect: (context, state) {
       final isLoggedIn = firebaseAuth.currentUser != null;
       final isSplashRoute = state.matchedLocation == splashScreenPath;
       final isHomeScreenPath = state.matchedLocation == homeScreenPath;
-      final isEditProfileScreenPath =
-          state.matchedLocation == editProfileScreenPath;
       final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
 
       if (!isLoggedIn) {
@@ -111,11 +109,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               },
             ),
           ]),
-      GoRoute(
-        path: verifyEmailScreenPath,
-        name: AppRoutes.verifyEmailScreen.name,
-        builder: (context, state) => const VerifyEmailScreen(),
-      ),
+      // GoRoute(
+      //   path: verifyEmailScreenPath,
+      //   name: AppRoutes.verifyEmailScreen.name,
+      //   builder: (context, state) => const VerifyEmailScreen(),
+      // ),
       GoRoute(
         path: countrySelectorScreenPath,
         name: AppRoutes.countrySelectorScreen.name,

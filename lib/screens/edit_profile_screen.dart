@@ -1,16 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:its_urgent/providers/cloud_firestore_provider.dart';
+import 'package:its_urgent/providers/firebase_auth_provider.dart';
+import 'package:its_urgent/providers/firebase_storeage_provider.dart';
+import 'package:its_urgent/routing/app_router.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   String _nameString = "";
   String? _errorText;
@@ -136,7 +142,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: _nameString.length < 2 ? null : () {},
+              onPressed: _nameString.length < 2
+                  ? null
+                  : () async {
+                      final res = await ref
+                          .watch(firebaseStorageProvider)
+                          .getImageUrl(
+                              ref.watch(firebaseAuthProvider).currentUser!.uid,
+                              File(_imageFile!.path));
+                      print(res);
+                      // context.pushReplacementNamed(AppRoutes.homeScreen.name);
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                 foregroundColor:
