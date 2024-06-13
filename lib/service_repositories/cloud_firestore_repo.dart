@@ -17,7 +17,9 @@ class CloudFirestoreRepo {
 
   Future<bool> checkForExistingUserData(String uid) async {
     final user = await _db.collection(usersCollectionPath).doc(uid).get();
+    print(uid);
     if (user.data() != null) {
+      print("user data from  firestore: ${user.data()}");
       _ref
           .read(itsUrgentUserProvider.notifier)
           .setUpCurrentUserSignedIn(user.data()!);

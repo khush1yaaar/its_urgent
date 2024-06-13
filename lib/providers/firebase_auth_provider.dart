@@ -9,5 +9,5 @@ final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
 
 
 final phoneAuthProvider = Provider<PhoneAuthRepo>((ref) {
-  return PhoneAuthRepo(ref.watch(firebaseAuthProvider));
+  return PhoneAuthRepo(ref.watch(firebaseAuthProvider), ref);
 });

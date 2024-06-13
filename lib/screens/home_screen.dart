@@ -11,8 +11,8 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       body: Center(
         child: TextButton(
-            onPressed: () {
-              ref.read(firebaseAuthProvider).signOut();
+            onPressed: () async {
+              await ref.read(phoneAuthProvider).signOut();
             },
             child: const Text("Sign OUT")),
       ),

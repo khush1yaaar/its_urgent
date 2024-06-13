@@ -9,7 +9,10 @@ class ItsUrgentUserNotifier extends Notifier<ItsUrgentUser?> {
 
   void setUpCurrentUserSignedIn(Map<String, dynamic> userData) {
     state = ItsUrgentUser.fromJson(userData);
-    
+  }
+
+  void clearCurrentUserOnSignOut() {
+    state = null;
   }
 }
 

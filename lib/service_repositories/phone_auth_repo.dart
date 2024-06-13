@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/providers/its_urgent_user_provider.dart';
 import 'package:its_urgent/routing/app_router.dart';
 
 class PhoneAuthRepo {
   final FirebaseAuth _firebaseAuth;
-  PhoneAuthRepo(this._firebaseAuth);
+  final ProviderRef _ref;
+  PhoneAuthRepo(this._firebaseAuth, this._ref);
 
   Future<void> phoneAuthentication(
       BuildContext context, String phoneCode, String phoneNumber) async {
@@ -48,8 +51,12 @@ class PhoneAuthRepo {
       );
       return userCredential.user != null;
     } on FirebaseAuthException catch (e) {
-    
       return e.message;
     }
+  }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+    _ref.read(itsUrgentUserProvider.notifier).clearCurrentUserOnSignOut();
   }
 }
