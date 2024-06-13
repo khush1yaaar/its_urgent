@@ -21,11 +21,13 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
   final controller = TextEditingController();
   final focusNode = FocusNode();
   bool _isLoading = false;
+  bool _isErrorText = false;
 
   Future<void> _verifyOtp() async {
     setState(() {
       _isLoading = true;
       _progressOrErrorText = "Verifying...";
+      _isErrorText = false;
     });
 
     final result = await ref
@@ -35,9 +37,11 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
     setState(() {
       _isLoading = false;
       if (result == true) {
+        _isErrorText = false;
         _progressOrErrorText = "Verification successful!";
       } else {
         _progressOrErrorText = result.toString();
+        _isErrorText = true;
         focusNode.requestFocus();
       }
     });
@@ -116,9 +120,9 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
                       _progressOrErrorText,
                       textAlign: TextAlign.start,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: _isLoading
+                          color: _isLoading || !_isErrorText
                               ? Theme.of(context).colorScheme.onSurface
-                              : Theme.of(context).colorScheme.error),
+                              :  Theme.of(context).colorScheme.error),
                     ),
                   )
                 ],

@@ -54,7 +54,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: splashScreenPath,
 
     debugLogDiagnostics: true,
-    redirectLimit: 1,
+
     redirect: (context, state) async {
       if (kDebugMode) {
         debugPrint(
