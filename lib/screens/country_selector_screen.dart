@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:its_urgent/contants/countries.dart';
+import 'package:its_urgent/constants/countries.dart';
 import 'package:its_urgent/widgets/countries_list_view.dart';
 import 'package:its_urgent/widgets/country_search_bar.dart';
 
