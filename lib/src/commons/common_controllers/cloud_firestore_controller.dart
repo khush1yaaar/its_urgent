@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
 
 const usersCollectionPath = 'users';
@@ -7,6 +8,7 @@ const usersCollectionPath = 'users';
 enum UserDocFields {
   name,
   imageUrl,
+  deviceToken,
 }
 
 class CloudFirestoreController {
@@ -31,14 +33,29 @@ class CloudFirestoreController {
       {required String uid,
       required String name,
       required String imageUrl}) async {
-    await _db.collection(usersCollectionPath).doc(uid).set({
-      UserDocFields.name.name: name,
-      UserDocFields.imageUrl.name: imageUrl,
-    });
+    await _db.collection(usersCollectionPath).doc(uid).set(
+      {
+        UserDocFields.name.name: name,
+        UserDocFields.imageUrl.name: imageUrl,
+      },
+      SetOptions(merge: true),
+    );
   }
 
   Future<dynamic> getUserData(String uid) async {
     final doesUserDataExists = await checkForExistingUserData(uid);
     if (doesUserDataExists) {}
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    // Assume user is logged in for this example
+    String userId = _ref.read(firebaseAuthProvider).currentUser!.uid;
+
+    await _db.collection(usersCollectionPath).doc(userId).set(
+      {
+        UserDocFields.deviceToken.name: FieldValue.arrayUnion([token]),
+      },
+      SetOptions(merge: true),
+    );
   }
 }
