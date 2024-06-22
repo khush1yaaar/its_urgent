@@ -16,6 +16,7 @@ Future<void> setupEmulators() async {
   await FirebaseStorage.instance.useStorageEmulator('127.0.0.1', 9199);
 }
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
