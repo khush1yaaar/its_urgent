@@ -17,7 +17,7 @@ class ItsUrgentUser {
     return ItsUrgentUser(
       name: data['name']!,
       imageUrl: data['imageUrl']!,
-      deviceToken: data['deviceToken']?? "NO DEVICE TOKEN",
+      deviceToken: data['deviceToken']?? "0000",
     );
   }
 

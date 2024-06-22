@@ -53,7 +53,7 @@ class CloudFirestoreController {
 
     await _db.collection(usersCollectionPath).doc(userId).set(
       {
-        UserDocFields.deviceToken.name: FieldValue.arrayUnion([token]),
+        UserDocFields.deviceToken.name: token,
       },
       SetOptions(merge: true),
     );
