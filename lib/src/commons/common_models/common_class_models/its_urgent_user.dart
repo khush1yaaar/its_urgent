@@ -13,7 +13,7 @@ class ItsUrgentUser {
     """;
   }
 
-  static ItsUrgentUser fromJson(Map<String, dynamic> data) {
+  factory ItsUrgentUser.fromJson (Map<String, dynamic> data) {
     return ItsUrgentUser(
       name: data['name']!,
       imageUrl: data['imageUrl']!,

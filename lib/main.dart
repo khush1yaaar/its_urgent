@@ -9,13 +9,15 @@ import 'package:its_urgent/src/core/routing/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+const ip = '192.168.0.131'; // for physical devices
+const localhost = '127.0.0.1';// for emulators
+
 // Firebase emulators
 Future<void> setupEmulators() async {
-  await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
-  FirebaseFirestore.instance.useFirestoreEmulator('127.0.0.1', 8080);
-  await FirebaseStorage.instance.useStorageEmulator('127.0.0.1', 9199);
+  await FirebaseAuth.instance.useAuthEmulator(ip, 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator(ip, 8080);
+  await FirebaseStorage.instance.useStorageEmulator(ip, 9199);
 }
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
