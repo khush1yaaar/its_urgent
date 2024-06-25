@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
 
@@ -9,6 +10,11 @@ enum UserDocFields {
   name,
   imageUrl,
   deviceToken,
+}
+
+enum UserRefFields {
+  uid,
+  phoneNumber,
 }
 
 class CloudFirestoreController {
@@ -58,4 +64,26 @@ class CloudFirestoreController {
       SetOptions(merge: true),
     );
   }
+
+  Future<List<UserRef>> fetchUsersRefs() async {
+    List<UserRef> usersRefs = [];
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('usersRef').get();
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        final user = UserRef(
+          uid: doc[UserRefFields.uid.name],
+          phoneNumber: doc.id,
+        );
+        print(user.toString());
+        usersRefs.add(user);
+      }
+    } catch (error) {
+      print("Error retrieving Firestore data: $error");
+    }
+    return usersRefs;
+  }
+
+
+
 }
