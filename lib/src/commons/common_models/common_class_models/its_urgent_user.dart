@@ -1,5 +1,4 @@
-// App Contact - User who has made account on the app, type ItsUrgentUser
-typedef AppContact = ItsUrgentUser;
+
 
 class ItsUrgentUser {
   final String name;

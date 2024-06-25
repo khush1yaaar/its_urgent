@@ -3,14 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/contacts_permission_widget.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/empty_contacts_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactsWidget extends ConsumerWidget {
   const ContactsWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final fruits = List<String>.generate(50, (i) => 'Fruit $i');
-    // final vegies = List<String>.generate(50, (i) => 'Vegies $i');
     final contactsProvider = ref.watch(deviceContactsProvider);
 
     // Check if permission is denied
@@ -68,6 +67,10 @@ class ContactsWidget extends ConsumerWidget {
                     contact.name,
                     textAlign: TextAlign.left,
                   ),
+                  subtitle: Text(
+                    contact.phoneNumber,
+                    textAlign: TextAlign.left,
+                  ),
                   onTap: () async {
                     // Navigator.of(context).push(MaterialPageRoute(
                     //   builder: (_) => ContactPage(contact),
@@ -100,11 +103,14 @@ class ContactsWidget extends ConsumerWidget {
                     contact.phoneNumber,
                     textAlign: TextAlign.left,
                   ),
-                  onTap: () async {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (_) => ContactPage(contact),
-                    // ));
-                  },
+                  trailing: TextButton(
+                    onPressed: () async {
+                      const String message = "You are invited to It's Urgent App. Check the app from https://github.com/0xharkirat/its_urgent";
+                      final smsURI = Uri.parse('sms:${contact.phoneNumber}?body=$message');
+                      await launchUrl(smsURI);
+                    },
+                    child: const Text("Invite"),
+                  ),
                 );
               },
             ),

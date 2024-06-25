@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
 import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
 
 const usersCollectionPath = 'users';
 
@@ -49,7 +49,6 @@ class CloudFirestoreController {
     );
   }
 
-  
   Future<void> saveTokenToDatabase(String token) async {
     // Assume user is logged in for this example
     String userId = _ref.read(firebaseAuthProvider).currentUser!.uid;
@@ -83,6 +82,10 @@ class CloudFirestoreController {
       List<UserRef> userRefs) async {
 
 
+    final Map<String, String> userIdToPhoneNumber = {
+      for (var userRef in userRefs) userRef.uid: userRef.phoneNumber
+    };
+
     final List<AppContact> users = [];
     try {
       final List<UserUid> userIds =
@@ -98,10 +101,10 @@ class CloudFirestoreController {
           name: doc[UserDocFields.name.name],
           imageUrl: doc[UserDocFields.imageUrl.name],
           deviceToken: doc[UserDocFields.deviceToken.name],
+          phoneNumber: userIdToPhoneNumber[doc.id]!,
         );
         users.add(user);
       }
-
     } catch (e) {
       print("Error fetching users from Firestore: $e");
     }
@@ -109,5 +112,3 @@ class CloudFirestoreController {
     return users;
   }
 }
-
-

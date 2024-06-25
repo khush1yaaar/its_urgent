@@ -5,6 +5,7 @@ import 'package:its_urgent/src/commons/common_models/common_class_models/its_urg
 import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/core/helpers/format_phone_number.dart';
+import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
 import 'package:its_urgent/src/features/notification/notification_models/device_contact_state.dart';
 import 'package:its_urgent/src/features/notification/notification_models/non_app_contact.dart';
 
