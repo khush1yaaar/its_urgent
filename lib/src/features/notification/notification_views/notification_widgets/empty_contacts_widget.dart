@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class EmptyContactsWidget extends StatelessWidget {
   const EmptyContactsWidget({
     super.key,
+    required this.errorText,
   });
+
+  final String errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class EmptyContactsWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          "None of your contacts is currently on It's Urgent App. \n\nAsk Your Contacts to download the app & sign in using their phone number.",
+          errorText,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Theme.of(context).colorScheme.onErrorContainer,

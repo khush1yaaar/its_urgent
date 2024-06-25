@@ -1,4 +1,6 @@
-// will add more as the functionality grows
+// App Contact - User who has made account on the app, type ItsUrgentUser
+typedef AppContact = ItsUrgentUser;
+
 class ItsUrgentUser {
   final String name;
   final String imageUrl;
@@ -29,3 +31,5 @@ class ItsUrgentUser {
     };
   }
 }
+
+

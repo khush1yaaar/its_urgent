@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';

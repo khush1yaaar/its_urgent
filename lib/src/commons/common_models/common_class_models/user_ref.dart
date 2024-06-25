@@ -1,5 +1,7 @@
+typedef UserUid = String;
+
 class UserRef {
-  final String uid;
+  final UserUid uid;
   final String phoneNumber;
 
   const UserRef({required this.uid, required this.phoneNumber});
@@ -24,5 +26,4 @@ class UserRef {
       'phoneNumber': user.phoneNumber,
     };
   }
-  
 }

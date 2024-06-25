@@ -9,64 +9,107 @@ class ContactsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final fruits = List<String>.generate(50, (i) => 'Fruit $i');
+    // final vegies = List<String>.generate(50, (i) => 'Vegies $i');
     final contactsProvider = ref.watch(deviceContactsProvider);
+
+    // Check if permission is denied
     if (contactsProvider.permissionDenied) {
       return const ContactsPermissionWidget();
     }
-    if (contactsProvider.contacts == null) {
+
+    // Check if contacts are still loading
+    if (contactsProvider.allDeviceContacts == null ||
+        contactsProvider.appContacts == null ||
+        contactsProvider.nonAppContacts == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (contactsProvider.contacts!.isEmpty) {
-      return const EmptyContactsWidget();
+    // Check if no contacts are found on the device
+    if (contactsProvider.allDeviceContacts!.isEmpty) {
+      return const EmptyContactsWidget(
+        errorText:
+            "No contacts found on your device. Add atleast one contact to your device to see it here.",
+      );
     }
+
+    // Check if no contacts are found on the app database
+    if (contactsProvider.appContacts!.isEmpty) {
+      return const EmptyContactsWidget(
+        errorText:
+            "Error fetching contacts from database. Please try again later.",
+      );
+    }
+
+    // Everything runs fine
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Your contacts on It's Urgent",
-            style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: contactsProvider.contacts!.length,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Your contacts on It's Urgent",
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: contactsProvider.appContacts!.length,
               itemBuilder: (context, i) {
-                final contact = contactsProvider.contacts![i];
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer)),
+                final contact = contactsProvider.appContacts![i];
+                return ListTile(
+                  title: Text(
+                    contact.name,
+                    textAlign: TextAlign.left,
                   ),
-                  child: TextButton(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        contact.displayName,
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    onPressed: () async {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (_) => ContactPage(contact),
-                      // ));
-                    },
-                  ),
+                  onTap: () async {
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (_) => ContactPage(contact),
+                    // ));
+                  },
                 );
               },
             ),
-          ),
-        ],
+            Text(
+              "Invite to It's Urgent",
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: contactsProvider.nonAppContacts!.length,
+              itemBuilder: (context, i) {
+                final contact = contactsProvider.nonAppContacts![i];
+                return ListTile(
+                  title: Text(
+                    contact.name,
+                    textAlign: TextAlign.left,
+                  ),
+                  subtitle: Text(
+                    contact.phoneNumber,
+                    textAlign: TextAlign.left,
+                  ),
+                  onTap: () async {
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (_) => ContactPage(contact),
+                    // ));
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
 import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
@@ -48,11 +49,7 @@ class CloudFirestoreController {
     );
   }
 
-  Future<dynamic> getUserData(String uid) async {
-    final doesUserDataExists = await checkForExistingUserData(uid);
-    if (doesUserDataExists) {}
-  }
-
+  
   Future<void> saveTokenToDatabase(String token) async {
     // Assume user is logged in for this example
     String userId = _ref.read(firebaseAuthProvider).currentUser!.uid;
@@ -68,14 +65,12 @@ class CloudFirestoreController {
   Future<List<UserRef>> fetchUsersRefs() async {
     List<UserRef> usersRefs = [];
     try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('usersRef').get();
+      QuerySnapshot querySnapshot = await _db.collection('usersRef').get();
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         final user = UserRef(
           uid: doc[UserRefFields.uid.name],
           phoneNumber: doc.id,
         );
-        print(user.toString());
         usersRefs.add(user);
       }
     } catch (error) {
@@ -84,6 +79,35 @@ class CloudFirestoreController {
     return usersRefs;
   }
 
+  Future<List<AppContact>> fetchUsersFromFirestore(
+      List<UserRef> userRefs) async {
 
 
+    final List<AppContact> users = [];
+    try {
+      final List<UserUid> userIds =
+          userRefs.map((userRef) => userRef.uid).toList();
+
+      final QuerySnapshot querySnapshot = await _db
+          .collection(usersCollectionPath)
+          .where(FieldPath.documentId, whereIn: userIds)
+          .get();
+
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        final user = AppContact(
+          name: doc[UserDocFields.name.name],
+          imageUrl: doc[UserDocFields.imageUrl.name],
+          deviceToken: doc[UserDocFields.deviceToken.name],
+        );
+        users.add(user);
+      }
+
+    } catch (e) {
+      print("Error fetching users from Firestore: $e");
+    }
+
+    return users;
+  }
 }
+
+
