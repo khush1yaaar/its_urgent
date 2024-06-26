@@ -1,7 +1,5 @@
-
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
 import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/core/helpers/format_phone_number.dart';
@@ -26,15 +24,9 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
     final List<Contact> deviceContacts = await _getContacts();
     state = state.copyWith(allDeviceContacts: deviceContacts);
 
-    for (final contact in deviceContacts) {
-      print("Contact: ${contact.displayName}, phones: ${contact.phones.first.number.formattedPhoneNumber}");
-      
-    }
-
     /// fetch userRefs from cloud_firestore
     final List<UserRef> firestoreUserRefs =
         await ref.read(cloudFirestoreProvider).fetchUsersRefs();
-
 
     /// ------------------------------
     /// For [AppContact]
@@ -46,12 +38,16 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
                 contact.phones.first.number.formattedPhoneNumber))
         .toList();
 
-    final List<AppContact> appContactsTypeItsUrgentUsers = await ref
+    final List<AppContact> appContacts = await ref
         .read(cloudFirestoreProvider)
         .fetchUsersFromFirestore(appContactsUserRefs);
+    
+    // for (final appContact in appContacts) {
+    //   print(appContact);
+    // }
+    
 
-    state = state.copyWith(appContacts: appContactsTypeItsUrgentUsers);
-
+    state = state.copyWith(appContacts: appContacts);
 
     /// ------------------------------
     /// For [NonAppContact]
@@ -72,8 +68,6 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
 
     // update the state
     state = state.copyWith(nonAppContacts: nonAppContactsTypeNonAppContacts);
-   
-    
   }
 
   /// private methods - only accessible within this controller
@@ -85,5 +79,3 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
     return await FlutterContacts.getContacts(withProperties: true);
   }
 }
-
-

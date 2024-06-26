@@ -1,5 +1,10 @@
 typedef UserUid = String;
 
+enum UserRefFields {
+  uid,
+  phoneNumber,
+}
+
 class UserRef {
   final UserUid uid;
   final String phoneNumber;
@@ -15,15 +20,15 @@ class UserRef {
 
   factory UserRef.fromJson(Map<String, dynamic> data) {
     return UserRef(
-      uid: data['uid']!,
-      phoneNumber: data['phoneNumber']!,
+      uid: data[UserRefFields.uid.name]!,
+      phoneNumber: data[UserRefFields.phoneNumber.name]!,
     );
   }
 
   static Map<String, String> toJson(UserRef user) {
     return {
-      'uid': user.uid,
-      'phoneNumber': user.phoneNumber,
+      UserRefFields.uid.name: user.uid,
+      UserRefFields.phoneNumber.name: user.phoneNumber,
     };
   }
 }

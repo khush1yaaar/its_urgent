@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
 import 'package:its_urgent/src/features/auth/models/data_constants/default_profile_image.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
@@ -67,6 +68,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       // Step 2: Add or update the user data in Firestore
       await CloudFirestoreController.addUser(
           uid: uid, name: _nameString, imageUrl: imageUrl);
+
+      // Step 3: Update the user data in the app state
+      ref.read(itsUrgentUserProvider.notifier).updateUserDetails({
+        UserDocFields.name.name: _nameString,
+        UserDocFields.imageUrl.name: imageUrl,
+        UserDocFields.uid.name: uid,
+      });
 
       setState(() {
         _uploadErrorText = "Profile Updated successfully";

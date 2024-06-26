@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/features/notification/notification_providers/cloud_function_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/contacts_permission_widget.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/empty_contacts_widget.dart';
@@ -72,9 +74,10 @@ class ContactsWidget extends ConsumerWidget {
                     textAlign: TextAlign.left,
                   ),
                   onTap: () async {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (_) => ContactPage(contact),
-                    // ));
+                    await ref.read(cloudFunctionProvider).sendNotification(
+                      receiverUid: contact.uid,
+                      senderUid: ref.read(itsUrgentUserProvider)!.uid
+                    );
                   },
                 );
               },
