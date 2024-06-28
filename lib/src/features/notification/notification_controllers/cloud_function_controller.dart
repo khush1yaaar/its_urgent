@@ -15,9 +15,28 @@ class CloudFunctionController {
     }
   }
 
-  Future<void> sendNotification(
+  // this function is called when the current user wants to get the focus status of another user,
+  // usually called by tapping on the user contact listTile
+  Future<void> getFocusStatus(
       {required UserUid senderUid, required UserUid receiverUid}) async {
     final data = {
+      'senderUid': senderUid,
+      'receiverUid': receiverUid,
+    };
+
+    final HttpsCallable callable = _functions.httpsCallable('getFocusStatus');
+    try {
+      final HttpsCallableResult result = await callable(data);
+      print(result.data);
+    } catch (e) {
+      print('Exception: $e');
+    }
+  }
+
+  // this function is called when some other user 
+  Future <void> sendFocusStatusToCloudFunction({required int focusStatus, required UserUid senderUid, required UserUid receiverUid}) async {
+    final data = {
+      'focusStatus': focusStatus,
       'senderUid': senderUid,
       'receiverUid': receiverUid,
     };

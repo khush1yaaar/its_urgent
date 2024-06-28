@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:focus_status/focus_status.dart';
 
-Future<void> getFocusStatus() async {
+Future<int> getFocusStatus() async {
   final focusStatusPlugin = FocusStatus();
-  int focusStatusCode;
+  int focusStatusCode = 0;
   // Platform messages may fail, so we use a try/catch PlatformException.
   // We also handle the message potentially returning null.
   try {
@@ -12,4 +12,6 @@ Future<void> getFocusStatus() async {
     focusStatusCode = 0;
   }
   print('Focus Status: $focusStatusCode');
+  return focusStatusCode;
+  
 }

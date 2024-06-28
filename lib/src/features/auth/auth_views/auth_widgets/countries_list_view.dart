@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_urgent/src/features/auth/models/data_constants/countries.dart';
 import 'package:its_urgent/src/features/auth/auth_providers/selected_country_provider.dart';
 
 class CountriesListView extends ConsumerStatefulWidget {
