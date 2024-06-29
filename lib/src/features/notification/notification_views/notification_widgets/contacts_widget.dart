@@ -14,20 +14,22 @@ class ContactsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contactsProvider = ref.watch(deviceContactsProvider);
 
+    
+
     // Check if permission is denied
     if (contactsProvider.permissionDenied) {
       return const ContactsPermissionWidget();
     }
 
     // Check if contacts are still loading
-    if (contactsProvider.allDeviceContacts == null ||
-        contactsProvider.appContacts == null ||
+    if (
+        contactsProvider.appContacts == null &&
         contactsProvider.nonAppContacts == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
     // Check if no contacts are found on the device
-    if (contactsProvider.allDeviceContacts!.isEmpty) {
+    if (contactsProvider.appContacts!.isEmpty && contactsProvider.nonAppContacts!.isEmpty) {
       return const EmptyContactsWidget(
         errorText:
             "No contacts found on your device. Add atleast one contact to your device to see it here.",
@@ -74,7 +76,7 @@ class ContactsWidget extends ConsumerWidget {
                     textAlign: TextAlign.left,
                   ),
                   onTap: () async {
-                    await ref.read(cloudFunctionProvider).sendNotification(
+                    await ref.read(cloudFunctionProvider).getFocusStatus(
                       receiverUid: contact.uid,
                       senderUid: ref.read(itsUrgentUserProvider)!.uid
                     );

@@ -25,7 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     await ref.read(notificationInstanceProvider).setupToken();
-    await ref.read(deviceContactsProvider.notifier).fetchContacts();
+    // await ref.read(deviceContactsProvider.notifier).fetchContacts();
     ref.read(notificationInstanceProvider).notificationForegroundListener();
   }
 
