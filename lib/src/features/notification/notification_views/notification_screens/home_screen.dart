@@ -93,19 +93,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
       body: _isLoading
           ? const Center(
-              child:  CircularProgressIndicator(),
+              child: CircularProgressIndicator(),
             )
-          : _notificationPermission
+          : false
               ? const ContactsWidget()
-              : PermissionButtonWidget(
-                  title: "Notification Permissions Denied",
-                  subtitle:
-                      "Tap here to go to device settings to grant notification permission",
-                  iconData: Icons.notifications_active,
-                  onPressed: () {
-                    AppSettings.openAppSettings(
-                        type: AppSettingsType.notification);
-                  }),
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PermissionButtonWidget(
+                      title: "Notification Permissions Denied",
+                      subtitle:
+                          "Tap here to go to device settings to grant notification permissions",
+                      iconData: Icons.notifications_active,
+                      onPressed: () {
+                        AppSettings.openAppSettings(
+                            type: AppSettingsType.notification);
+                      }),
+                ),
     );
   }
 }
