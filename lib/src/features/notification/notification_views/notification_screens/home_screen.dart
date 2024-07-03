@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
@@ -6,6 +7,7 @@ import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/notification_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/contacts_widget.dart';
+import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/permission_button_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -14,8 +16,11 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  bool permissionGranted = false;
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
+  bool _notificationPermission = false;
+
+  bool _isLoading = false;
 
   Future<void> _init() async {
     final user = ref.read(itsUrgentUserProvider);
@@ -25,17 +30,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     await ref.read(notificationInstanceProvider).setupToken();
-    // await ref.read(deviceContactsProvider.notifier).fetchContacts();
+
+    _notificationPermission = await ref
+        .read(notificationInstanceProvider)
+        .requestNotificationPermission();
+    setState(() {});
+    // await ref.read(deviceContactsProvider.notifier).fetchContacts();\
+
     ref.read(notificationInstanceProvider).notificationForegroundListener();
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
     _init();
   }
 
-  
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      print("App Resumed");
+      _notificationPermission = await ref
+          .read(notificationInstanceProvider)
+          .requestNotificationPermission();
+
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +91,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: const ContactsWidget(),
+      body: _isLoading
+          ? const Center(
+              child:  CircularProgressIndicator(),
+            )
+          : _notificationPermission
+              ? const ContactsWidget()
+              : PermissionButtonWidget(
+                  title: "Notification Permissions Denied",
+                  subtitle:
+                      "Tap here to go to device settings to grant notification permission",
+                  iconData: Icons.notifications_active,
+                  onPressed: () {
+                    AppSettings.openAppSettings(
+                        type: AppSettingsType.notification);
+                  }),
     );
   }
 }
