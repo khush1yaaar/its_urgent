@@ -2,7 +2,9 @@ import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:focus_status/focus_status.dart';
 import 'package:its_urgent/src/commons/common_models/common_class_models/app_permissions.dart';
+
 
 /// A controller to manage the permissions of the app using [Notifier].
 class PermissionsController extends Notifier<AppPermissions> {
@@ -75,6 +77,10 @@ class PermissionsController extends Notifier<AppPermissions> {
   Future<void> setDndAccessPermission() async {
     state = state.copyWith(dndAccessPermissions: const AsyncValue.loading());
     try {
+      // await AppSettings.openAppSettings(type: AppSettingsType.sound);
+      final focusStatus = FocusStatus();
+      final dnd = await focusStatus.getDNDAccess();
+      print("DND Access Permission: $dnd");
       // Your logic to request DND access permission
       final permissionGranted = await Future.delayed(const Duration(seconds: 2),
           () => true); // Simulate a permission request
