@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:its_urgent/src/core/helpers/go_router_refresh_stream.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
+import 'package:its_urgent/src/features/notification/notification_views/notification_screens/challenge_screen.dart';
 import 'package:its_urgent/src/features/splash/splash_providers/splash_screen_provider.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_screens/auth_screen.dart';
 import 'package:its_urgent/src/commons/common_views/common_screens/error_screen.dart';
@@ -29,6 +30,7 @@ enum AppRoutes {
   countrySelectorScreen,
   smsCodeScreen,
   editProfileScreen,
+  challengeScreen,
 }
 
 // Const route paths
@@ -41,6 +43,7 @@ const countrySelectorScreenPath = '/countrySelectorScreen';
 const editProfileScreenPath = '/editProfileScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
+const challengeScreenPath = '/challengeScreen';
 
 int appRedirectCount = 0;
 // go router provider
@@ -55,65 +58,65 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
 
     redirect: (context, state) async {
-      if (kDebugMode) {
-        debugPrint(
-            "\n<----- calling redirect function for the  ${++appRedirectCount} ------>");
-        debugPrint("current route BEFORE logic is: ${state.matchedLocation}");
-      }
+      // if (kDebugMode) {
+      //   debugPrint(
+      //       "\n<----- calling redirect function for the  ${++appRedirectCount} ------>");
+      //   debugPrint("current route BEFORE logic is: ${state.matchedLocation}");
+      // }
 
       final isLoggedIn = firebaseAuth.currentUser != null;
       final isSplashRoute = state.matchedLocation == splashScreenPath;
       final isHomeScreenPath = state.matchedLocation == homeScreenPath;
       final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
 
-      print("Is logged IN; $isLoggedIn");
+      // print("Is logged IN; $isLoggedIn");
 
       if (!isLoggedIn) {
-        debugPrint("We have entered now in not isLoggedIn.....");
-        debugPrint("current route AFTER logic is: ${state.matchedLocation}");
+        // debugPrint("We have entered now in not isLoggedIn.....");
+        // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
         if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
           if (state.matchedLocation != authScreenPath) {
-            debugPrint("We have entered now in authscreepath");
-            debugPrint(
-                "current route AFTER logic is: ${state.matchedLocation}");
+            // debugPrint("We have entered now in authscreepath");
+            // debugPrint(
+            //     "current route AFTER logic is: ${state.matchedLocation}");
             return authScreenPath;
           }
         } else if (splashScreenBoolean && isAuthScreenPath) {
-          debugPrint(
-              "We have entered now in state.matched location - verification screen");
-          debugPrint("current route AFTER logic is: ${state.matchedLocation}");
+          // debugPrint(
+          //     "We have entered now in state.matched location - verification screen");
+          // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
           return state.matchedLocation;
         } else if (!splashScreenBoolean) {
           if (state.matchedLocation != splashScreenPath) {
-            debugPrint("We have entered now in splashscreen path");
-            debugPrint(
-                "current route AFTER logic is: ${state.matchedLocation}");
+            // debugPrint("We have entered now in splashscreen path");
+            // debugPrint(
+            //     "current route AFTER logic is: ${state.matchedLocation}");
             return splashScreenPath;
           }
         }
       } else {
-        debugPrint("isLoggedIn.....");
+        // debugPrint("isLoggedIn.....");
         final isUserProfileExists = await ref
             .read(cloudFirestoreProvider)
             .checkForExistingUserData(firebaseAuth.currentUser!.uid);
         if (isAuthScreenPath || !isUserProfileExists) {
           if (state.matchedLocation != editProfileScreenPath) {
-            debugPrint("We have entered now in editProfileScreen");
-            debugPrint(
-                "current route AFTER logic is: ${state.matchedLocation}");
+            // debugPrint("We have entered now in editProfileScreen");
+            // debugPrint(
+            //     "current route AFTER logic is: ${state.matchedLocation}");
             return editProfileScreenPath;
           }
         } else if (isSplashRoute) {
           if (state.matchedLocation != homeScreenPath) {
-            debugPrint("We have entered now in homescreen");
-            debugPrint(
-                "current route AFTER logic is: ${state.matchedLocation}");
+            // debugPrint("We have entered now in homescreen");
+            // debugPrint(
+            //     "current route AFTER logic is: ${state.matchedLocation}");
             return homeScreenPath;
           }
         }
       }
-      debugPrint("Now just normal routing occurs");
-      debugPrint("current route AFTER logic is: ${state.matchedLocation}");
+      // debugPrint("Now just normal routing occurs");
+      // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
       return null;
     },
 
@@ -159,7 +162,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: editProfileScreenPath,
         name: AppRoutes.editProfileScreen.name,
         builder: (context, state) => const EditProfileScreen(),
-      )
+      ),
+      GoRoute(
+        path: challengeScreenPath,
+        name: AppRoutes.challengeScreen.name,
+        builder: (context, state) {
+          final name = state.uri.queryParameters['name']!;
+          
+          final senderUid = state.uri.queryParameters['senderUid']!;
+          final receiverUid = state.uri.queryParameters['receiverUid']!;
+          return ChallengeScreen(name:name, focusStatus: 2, senderUid: senderUid, receiverUid: receiverUid);
+        
+        },
+      ),
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
   );

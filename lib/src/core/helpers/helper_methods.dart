@@ -54,8 +54,11 @@ Future<void> showNotification(Map<String, dynamic> notificationData) async {
     title: notificationData['title'],
     body: notificationData['body'],
     wakeUpScreen: true,
+    
 
   ));
+
+  
 
   // await AwesomeNotifications().createNotificationFromJsonData(notificationData);
 }
@@ -63,11 +66,12 @@ Future<void> showNotification(Map<String, dynamic> notificationData) async {
 
 
  // this function is called to send focus status to the cloud function & show notification accordingly.
-  Future <void> sendFocusStatusToCloudFunction({required int focusStatus, required UserUid senderUid, required UserUid receiverUid}) async {
+  Future <void> sendFocusStatusToCloudFunction({required int focusStatus, required UserUid senderUid, required UserUid receiverUid, bool bypass = false}) async {
     final data = {
       'focusStatus': focusStatus,
       'senderUid': senderUid,
       'receiverUid': receiverUid,
+      'bypass': bypass,
     };
 
     final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('sendNotification');

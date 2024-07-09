@@ -1,8 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
-import 'package:its_urgent/src/features/notification/notification_providers/cloud_function_provider.dart';
+import 'package:its_urgent/src/core/routing/app_router.dart';
 
 class NotificationController {
   final FirebaseMessaging _firebaseMessaging;
@@ -39,43 +41,52 @@ class NotificationController {
   }
 
   // Foreground messages.
-  void notificationForegroundListener() async {
+  void notificationForegroundListener(BuildContext context) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
 
-
       // If notification is received, then show the notification.
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification.toString()}');
-        final notificationData = {
-          'title': message.notification!.title,
-          'body': message.notification!.body,
-        };
-        await showNotification(notificationData);
-        
-        // await showNotification(message.data);
-      }
 
       // if data only message is received, then get the focus status & send the focus status back to the cloud function.
       if (message.data.isNotEmpty) {
         final type = message.data['type'];
         print('Type: $type');
-
-        // get focus status & send the focus status back to the cloud function.
-        if (type == notificationTypeMap[NotificationType.getFocusStatus].toString()) {
-          final int focusStatus = await getFocusStatus();
+         final int focusStatus = await getFocusStatus();
           final senderUid = message.data['senderUid'];
           final receiverUid = message.data['receiverUid'];
+
+        // get focus status & send the focus status back to the cloud function.
+        if (type ==
+            notificationTypeMap[NotificationType.getFocusStatus].toString()) {
+         
 
           await sendFocusStatusToCloudFunction(
               focusStatus: focusStatus,
               senderUid: senderUid,
               receiverUid: receiverUid);
         }
-      }
 
-     
+        if (message.notification != null) {
+          print(
+              'Message also contained a notification: ${message.notification.toString()}');
+          final notificationData = {
+            'title': message.notification!.title,
+            'body': message.notification!.body,
+          };
+          await showNotification(notificationData);
+
+          // await showNotification(message.data);
+        }
+
+        if (type == notificationTypeMap[NotificationType.dndOn].toString()) {
+          context.goNamed(AppRoutes.challengeScreen.name, queryParameters: {
+            'name': message.data['receiverName'],
+              'senderUid': senderUid,
+              'receiverUid': receiverUid
+          });
+        }
+      }
     }, onError: (error) {
       print("error: $error");
     }, onDone: () {
