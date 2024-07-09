@@ -1,6 +1,7 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/src/commons/common_controllers/permissions_controller.dart';
+import 'package:its_urgent/src/commons/common_views/common_screens/permissions_screen.dart';
 import 'package:its_urgent/src/core/helpers/go_router_refresh_stream.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
@@ -23,6 +24,7 @@ enum PathParams {
 // enum for named routes
 enum AppRoutes {
   splashScreen,
+  permissionsScreen,
   homeScreen,
   authScreen,
   errorScreen,
@@ -44,6 +46,7 @@ const editProfileScreenPath = '/editProfileScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
 const challengeScreenPath = '/challengeScreen';
+const permissionsScreenPath = '/permissionsScreen';
 
 int appRedirectCount = 0;
 // go router provider
@@ -51,6 +54,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   // Get the instance of FirebaseAuth
   final firebaseAuth = ref.watch(firebaseAuthProvider);
   final splashScreenBoolean = ref.watch(splashScreenBooleanProvider);
+  final appPermission = ref.watch(permissionsControllerProvider);
 
   return GoRouter(
     initialLocation: splashScreenPath,
@@ -69,11 +73,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final isHomeScreenPath = state.matchedLocation == homeScreenPath;
       final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
 
+      // Check if permissions are loaded and determine if any permission is required
+      final isContactPermissionGranted =
+          appPermission.contactPermissions.asData?.value ?? false;
+      final isNotificationPermissionGranted =
+          appPermission.notificationPermissions.asData?.value ?? false;
+      final isDndAccessPermissionGranted =
+          appPermission.dndAccessPermissions.asData?.value ?? false;
+
+      final isPermissionRequired = !isContactPermissionGranted ||
+          !isNotificationPermissionGranted ||
+          !isDndAccessPermissionGranted;
+
       // print("Is logged IN; $isLoggedIn");
 
       if (!isLoggedIn) {
         // debugPrint("We have entered now in not isLoggedIn.....");
         // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
+        if (splashScreenBoolean && isSplashRoute && isPermissionRequired) {
+          return permissionsScreenPath;
+        }
         if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
           if (state.matchedLocation != authScreenPath) {
             // debugPrint("We have entered now in authscreepath");
@@ -129,6 +148,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
+        path: permissionsScreenPath,
+        name: AppRoutes.permissionsScreen.name,
+        builder: (context, state) => const PermissionsScreen(),
+      ),
+      GoRoute(
         path: homeScreenPath,
         name: AppRoutes.homeScreen.name,
         builder: (context, state) => const HomeScreen(),
@@ -168,11 +192,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.challengeScreen.name,
         builder: (context, state) {
           final name = state.uri.queryParameters['name']!;
-          
+
           final senderUid = state.uri.queryParameters['senderUid']!;
           final receiverUid = state.uri.queryParameters['receiverUid']!;
-          return ChallengeScreen(name:name, focusStatus: 2, senderUid: senderUid, receiverUid: receiverUid);
-        
+          return ChallengeScreen(
+              name: name,
+              focusStatus: 2,
+              senderUid: senderUid,
+              receiverUid: receiverUid);
         },
       ),
     ],

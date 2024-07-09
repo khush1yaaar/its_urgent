@@ -55,7 +55,7 @@ class SplashScreen extends ConsumerWidget {
                     .read(splashScreenBooleanProvider.notifier)
                     .onSplashScreenRemoved();
                 // then replace the splash screen route with auth screen route
-                context.goNamed(AppRoutes.authScreen.name);
+                context.goNamed(AppRoutes.permissionsScreen.name);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
