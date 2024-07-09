@@ -38,6 +38,7 @@ dependencies:
     git:
       url: https://github.com/0xharkirat/focus_status.git
       ref: main
+  awesome_notifications: ^0.9.3+1
 
 
   

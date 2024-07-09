@@ -33,20 +33,5 @@ class CloudFunctionController {
     }
   }
 
-  // this function is called when some other user 
-  Future <void> sendFocusStatusToCloudFunction({required int focusStatus, required UserUid senderUid, required UserUid receiverUid}) async {
-    final data = {
-      'focusStatus': focusStatus,
-      'senderUid': senderUid,
-      'receiverUid': receiverUid,
-    };
-
-    final HttpsCallable callable = _functions.httpsCallable('sendNotification');
-    try {
-      final HttpsCallableResult result = await callable(data);
-      print(result.data);
-    } catch (e) {
-      print('Exception: $e');
-    }
-  }
+ 
 }

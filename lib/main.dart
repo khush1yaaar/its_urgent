@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,11 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/constants/theme.dart';
-import 'package:its_urgent/src/core/helpers/get_focus_status.dart';
+import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
 
 const kIP = '192.168.0.131'; // for physical devices
 const kLOCALHOST = '127.0.0.1'; // for emulators
@@ -24,6 +24,7 @@ Future<void> setupEmulators() async {
   FirebaseFunctions.instance.useFunctionsEmulator(kIP, 5001);
 }
 
+/// see ["https://firebase.google.com/docs/cloud-messaging/flutter/receive#:~:text=Handle%20background%20messages"]
 // The background handler function is a top-level function and must not be inside a class.
 // This function is called when the app is in the background or terminated, when a message is received.
 // The function is registered in the main.dart file.
@@ -33,11 +34,39 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
+  print('Got a message whilst in the foreground!');
+  print('Message data: ${message.data}');
 
-  await getFocusStatus();
+  if (message.notification != null) {
+    print(
+        'Message also contained a notification: ${message.notification.toString()}');
+    final notificationData = {
+      'title': message.notification!.title,
+      'body': message.notification!.body,
+    };
+    await showNotification(notificationData);
+
+    // await showNotification(message.data);
+  }
+
+  if (message.data.isNotEmpty) {
+    final type = message.data['type'];
+    print('Type: $type');
+
+    // get focus status & send the focus status back to the cloud function.
+    if (type ==
+        notificationTypeMap[NotificationType.getFocusStatus].toString()) {
+      final int focusStatus = await getFocusStatus();
+      final senderUid = message.data['senderUid'];
+      final receiverUid = message.data['receiverUid'];
+
+      await sendFocusStatusToCloudFunction(
+          focusStatus: focusStatus,
+          senderUid: senderUid,
+          receiverUid: receiverUid);
+    }
+  }
 }
-
 
 /// The [main] function is the entry point of the Flutter app.
 void main() async {
@@ -46,8 +75,23 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await init(); //init function from flutter_libphonenumber
-  await setupEmulators();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await setupEmulators(); // setup Firebase Emulators for local development
+  FirebaseMessaging.onBackgroundMessage(
+      firebaseMessagingBackgroundHandler); // register the background handler function
+  AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+          channelKey: 'basic_channel',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          ledColor: Colors.white,
+          playSound: true,
+          enableVibration: true,
+          enableLights: true,
+          importance: NotificationImportance.Max)
+    ],
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 

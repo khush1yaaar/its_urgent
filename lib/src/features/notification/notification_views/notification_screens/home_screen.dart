@@ -95,7 +95,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : false
+          : _notificationPermission
               ? const ContactsWidget()
               : Padding(
                   padding: const EdgeInsets.all(8.0),

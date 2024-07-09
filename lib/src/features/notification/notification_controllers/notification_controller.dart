@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/core/helpers/get_focus_status.dart';
+import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/cloud_function_provider.dart';
 
@@ -44,18 +44,31 @@ class NotificationController {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
 
+
+      // If notification is received, then show the notification.
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification.toString()}');
+        final notificationData = {
+          'title': message.notification!.title,
+          'body': message.notification!.body,
+        };
+        await showNotification(notificationData);
+        
+        // await showNotification(message.data);
+      }
+
       // if data only message is received, then get the focus status & send the focus status back to the cloud function.
       if (message.data.isNotEmpty) {
         final type = message.data['type'];
         print('Type: $type');
 
         // get focus status & send the focus status back to the cloud function.
-        if (type == '0') {
+        if (type == notificationTypeMap[NotificationType.getFocusStatus].toString()) {
           final int focusStatus = await getFocusStatus();
           final senderUid = message.data['senderUid'];
           final receiverUid = message.data['receiverUid'];
 
-          await _ref.read(cloudFunctionProvider).sendFocusStatusToCloudFunction(
+          await sendFocusStatusToCloudFunction(
               focusStatus: focusStatus,
               senderUid: senderUid,
               receiverUid: receiverUid);
@@ -81,11 +94,15 @@ class NotificationController {
 //   }
 // }
 
-const notificationTypes = {
-  0: "getFocusStatus",
-  1: "dndOFF",
-  2: "dndOn",
-  200: "sentSuccessfully",
-  201: "receivedSuccessfully",
-  909: "errorGettingFocusStatus",
-};
+
+
+
+
+// const notificationTypes = {
+//   100: "errorGettingFocusStatus",
+//   99: "getFocusStatus",
+//   98: "receivedSuccessfully",
+//   97: "sentSuccessfully",
+//   96: "dndOn",
+//   2: "dndOn",
+// };
