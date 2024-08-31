@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/cloud_function_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/contacts_permission_widget.dart';
@@ -78,7 +78,7 @@ class ContactsWidget extends ConsumerWidget {
                   onTap: () async {
                     await ref.read(cloudFunctionProvider).getFocusStatus(
                       receiverUid: contact.uid,
-                      senderUid: ref.read(itsUrgentUserProvider)!.uid
+                      senderUid: ref.read(itsUrgentUserController)!.uid
                     );
                   },
                 );

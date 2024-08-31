@@ -1,4 +1,4 @@
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
+import 'package:its_urgent/src/core/models/its_urgent_user.dart';
 
 class AppContact extends ItsUrgentUser {
   final String phoneNumber;

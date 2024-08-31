@@ -1,4 +1,4 @@
-import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
 
 enum UserDocFields {
   name,

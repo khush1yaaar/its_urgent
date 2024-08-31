@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
+import 'package:its_urgent/src/core/models/its_urgent_user.dart';
 
-class ItsUrgentUserNotifier extends Notifier<ItsUrgentUser?> {
+class ItsUrgentUserController extends Notifier<ItsUrgentUser?> {
   @override
   ItsUrgentUser? build() {
     return null;
@@ -33,7 +33,7 @@ class ItsUrgentUserNotifier extends Notifier<ItsUrgentUser?> {
   }
 }
 
-final itsUrgentUserProvider =
-    NotifierProvider<ItsUrgentUserNotifier, ItsUrgentUser?>(() {
-  return ItsUrgentUserNotifier();
+final itsUrgentUserController =
+    NotifierProvider<ItsUrgentUserController, ItsUrgentUser?>(() {
+  return ItsUrgentUserController();
 });

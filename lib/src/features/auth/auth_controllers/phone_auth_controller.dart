@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 
 class PhoneAuthController {
@@ -57,6 +58,12 @@ class PhoneAuthController {
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
-    _ref.read(itsUrgentUserProvider.notifier).clearCurrentUserOnSignOut();
+    _ref.read(itsUrgentUserController.notifier).clearCurrentUserOnSignOut();
   }
 }
+
+
+final phoneAuthController = Provider<PhoneAuthController>((ref) {
+  return PhoneAuthController(ref.watch(firebaseAuthProvider), ref);
+});
+

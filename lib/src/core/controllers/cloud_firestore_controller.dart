@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/core/models/its_urgent_user.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
 
 const usersCollectionPath = 'users';
@@ -23,7 +25,7 @@ class CloudFirestoreController {
       };
     
       _ref
-          .read(itsUrgentUserProvider.notifier)
+          .read(itsUrgentUserController.notifier)
           .updateUserDetails(userData);
     }
     
@@ -57,7 +59,7 @@ class CloudFirestoreController {
     );
 
     // Update the device token in the user object
-    _ref.read(itsUrgentUserProvider.notifier).updateUserDetails({
+    _ref.read(itsUrgentUserController.notifier).updateUserDetails({
       UserDocFields.deviceToken.name: token,
     });
   }
@@ -75,7 +77,7 @@ class CloudFirestoreController {
         usersRefs.add(user);
       }
     } catch (error) {
-      print("Error retrieving Firestore data: $error");
+      log("Error retrieving Firestore data: $error");
     }
     return usersRefs;
   }
@@ -107,9 +109,14 @@ class CloudFirestoreController {
         users.add(user);
       }
     } catch (e) {
-      print("Error fetching users from Firestore: $e");
+      log("Error fetching users from Firestore: $e");
     }
 
     return users;
   }
 }
+
+
+final cloudFirestoreController = Provider<CloudFirestoreController>((ref) {
+  return CloudFirestoreController(FirebaseFirestore.instance, ref);
+});

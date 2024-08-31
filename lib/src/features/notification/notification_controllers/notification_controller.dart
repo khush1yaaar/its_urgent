@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
-import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
+
 import 'package:its_urgent/src/core/routing/app_router.dart';
 
 class NotificationController {
@@ -17,7 +20,7 @@ class NotificationController {
     String? token = await _firebaseMessaging.getToken();
 
     // Save the token to the database function from cloud firestore controller
-    final saveToken = _ref.read(cloudFirestoreProvider).saveTokenToDatabase;
+    final saveToken = _ref.read(cloudFirestoreController).saveTokenToDatabase;
 
     // Save the initial token to the database
     await saveToken(token!);
@@ -43,15 +46,15 @@ class NotificationController {
   // Foreground messages.
   void notificationForegroundListener(BuildContext context) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+      log('Got a message whilst in the foreground!');
+      log('Message data: ${message.data}');
 
       // If notification is received, then show the notification.
 
       // if data only message is received, then get the focus status & send the focus status back to the cloud function.
       if (message.data.isNotEmpty) {
         final type = message.data['type'];
-        print('Type: $type');
+        log('Type: $type');
          final int focusStatus = await getFocusStatus();
           final senderUid = message.data['senderUid'];
           final receiverUid = message.data['receiverUid'];
@@ -68,7 +71,7 @@ class NotificationController {
         }
 
         if (message.notification != null) {
-          print(
+          log(
               'Message also contained a notification: ${message.notification.toString()}');
           final notificationData = {
             'title': message.notification!.title,
@@ -88,9 +91,9 @@ class NotificationController {
         }
       }
     }, onError: (error) {
-      print("error: $error");
+      log("error: $error");
     }, onDone: () {
-      print("done");
+      log("done");
     });
   }
 }
@@ -99,9 +102,9 @@ class NotificationController {
 //   const platform = MethodChannel('com.hsiharki.itsurgent/battery');
 //   try {
 //     final int batteryLevel = await platform.invokeMethod('getFocusStatus');
-//     print('Focus Status: $batteryLevel%');
+//     log('Focus Status: $batteryLevel%');
 //   } on PlatformException catch (e) {
-//     print('Failed to get Focus Status: ${e.message}');
+//     log('Failed to get Focus Status: ${e.message}');
 //   }
 // }
 

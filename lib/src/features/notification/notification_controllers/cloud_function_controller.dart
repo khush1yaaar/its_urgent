@@ -1,5 +1,7 @@
+import 'dart:developer';
+
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
 
 class CloudFunctionController {
   final FirebaseFunctions _functions;
@@ -9,9 +11,9 @@ class CloudFunctionController {
     final HttpsCallable callable = _functions.httpsCallable('testFunction');
     try {
       final HttpsCallableResult result = await callable();
-      print(result.data);
+      log(result.data);
     } catch (e) {
-      print('Exception: $e');
+      log('Exception: $e');
     }
   }
 
@@ -27,9 +29,9 @@ class CloudFunctionController {
     final HttpsCallable callable = _functions.httpsCallable('getFocusStatus');
     try {
       final HttpsCallableResult result = await callable(data);
-      print(result.data);
+      log(result.data);
     } catch (e) {
-      print('Exception: $e');
+      log('Exception: $e');
     }
   }
 

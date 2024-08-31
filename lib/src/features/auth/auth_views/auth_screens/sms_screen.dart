@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
+import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_controller.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_widgets/pinput_constants.dart';
 import 'package:pinput/pinput.dart';
 
@@ -31,7 +32,7 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
     });
 
     final result = await ref
-        .read(phoneAuthProvider)
+        .read(phoneAuthController)
         .verifyOtp(widget.verificationId, _otpCode);
 
     setState(() {

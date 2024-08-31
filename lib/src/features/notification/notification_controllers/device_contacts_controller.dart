@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
-import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
 import 'package:its_urgent/src/core/helpers/format_phone_number.dart';
 import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
 import 'package:its_urgent/src/features/notification/notification_models/device_contact_state.dart';
@@ -27,7 +27,7 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
 
     // Fetch userRefs from cloud_firestore
     final List<UserRef> firestoreUserRefs =
-        await ref.read(cloudFirestoreProvider).fetchUsersRefs();
+        await ref.read(cloudFirestoreController).fetchUsersRefs();
 
     // Use compute for filtering app contacts
     final appContactsResult = await compute(_filterAppContacts, {
@@ -42,7 +42,7 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
 
     // Fetch app contacts from firestore
     final List<AppContact> appContacts = await ref
-        .read(cloudFirestoreProvider)
+        .read(cloudFirestoreController)
         .fetchUsersFromFirestore(appContactsUserRefs);
 
     // Use compute for converting remaining contacts to non-app contacts

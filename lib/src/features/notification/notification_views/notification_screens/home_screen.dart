@@ -1,11 +1,14 @@
+import 'dart:developer';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
+import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_providers/notification_provider.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/contacts_widget.dart';
@@ -25,10 +28,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   bool _isLoading = false;
 
   Future<void> _init() async {
-    final user = ref.read(itsUrgentUserProvider);
+    final user = ref.read(itsUrgentUserController);
     if (user == null) {
       final uid = ref.read(firebaseAuthProvider).currentUser!.uid;
-      await ref.read(cloudFirestoreProvider).checkForExistingUserData(uid);
+      await ref.read(cloudFirestoreController).checkForExistingUserData(uid);
     }
 
     await ref.read(notificationInstanceProvider).setupToken();
@@ -75,7 +78,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         _isLoading = true;
       });
 
-      print("App Resumed");
+      log("App Resumed");
       _notificationPermission = await ref
           .read(notificationInstanceProvider)
           .requestNotificationPermission();
@@ -100,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             IconButton(
               onPressed: () async {
-                await ref.read(phoneAuthProvider).signOut();
+                await ref.read(phoneAuthController).signOut();
               },
               icon: const Icon(Icons.logout),
             ),

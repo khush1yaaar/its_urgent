@@ -1,14 +1,17 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_urgent/src/commons/common_controllers/permissions_controller.dart';
-import 'package:its_urgent/src/commons/common_views/common_screens/permissions_screen.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
+import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
+import 'package:its_urgent/src/core/views/screens/permissions_screen.dart';
 import 'package:its_urgent/src/core/helpers/go_router_refresh_stream.dart';
-import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_screens/challenge_screen.dart';
 import 'package:its_urgent/src/features/splash/splash_providers/splash_screen_provider.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_screens/auth_screen.dart';
-import 'package:its_urgent/src/commons/common_views/common_screens/error_screen.dart';
+import 'package:its_urgent/src/core/views/screens/error_screen.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_screens/country_selector_screen.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_screens/edit_profile_screen.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_screens/home_screen.dart';
@@ -38,7 +41,7 @@ enum AppRoutes {
 // Const route paths
 const authScreenPath = '/authScreen';
 const homeScreenPath = '/homeScreen';
-const splashScreenPath = '/';
+const splashScreenPath = '/splashScreen';
 const errorScreenPath = '/errorScreen';
 // const verifyEmailScreenPath = '/verifyEmailScreen';
 const countrySelectorScreenPath = '/countrySelectorScreen';
@@ -48,19 +51,22 @@ final smsCodeScreenPath =
 const challengeScreenPath = '/challengeScreen';
 const permissionsScreenPath = '/permissionsScreen';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 int appRedirectCount = 0;
 // go router provider
 final goRouterProvider = Provider<GoRouter>((ref) {
   // Get the instance of FirebaseAuth
   final firebaseAuth = ref.watch(firebaseAuthProvider);
   final splashScreenBoolean = ref.watch(splashScreenBooleanProvider);
-  final appPermission = ref.watch(permissionsControllerProvider);
+  // final appPermission = ref.watch(permissionsControllerProvider);
+
+  // final permissionsBool = ref.watch(permissionBoolController);
 
   return GoRouter(
     initialLocation: splashScreenPath,
-
+    navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
-
     redirect: (context, state) async {
       // if (kDebugMode) {
       //   debugPrint(
@@ -70,37 +76,46 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       final isLoggedIn = firebaseAuth.currentUser != null;
       final isSplashRoute = state.matchedLocation == splashScreenPath;
-      final isHomeScreenPath = state.matchedLocation == homeScreenPath;
-      final isAuthScreenPath = state.matchedLocation.startsWith(authScreenPath);
+      final isHomeScreenRoute = state.matchedLocation == homeScreenPath;
+      final isAuthScreenRoute =
+          state.matchedLocation.startsWith(authScreenPath);
+
+      // if (permissionsBool.isLoading) {
+      //   log("permissionsBool.isLoading");
+      //   log("going to splashScreenPath");
+      //   return splashScreenPath;
+      // }
+
+      // if (permissionsBool.value == false) {
+      //   log("permissionsBool.value == false");
+      //   log("going to permissionsScreenPath");
+      //   return permissionsScreenPath;
+      // } 
 
       // Check if permissions are loaded and determine if any permission is required
-      final isContactPermissionGranted =
-          appPermission.contactPermissions.asData?.value ?? false;
-      final isNotificationPermissionGranted =
-          appPermission.notificationPermissions.asData?.value ?? false;
-      final isDndAccessPermissionGranted =
-          appPermission.dndAccessPermissions.asData?.value ?? false;
-
-      final isPermissionRequired = !isContactPermissionGranted ||
-          !isNotificationPermissionGranted ||
-          !isDndAccessPermissionGranted;
+      // final isContactPermissionGranted =
+      //     appPermission.contactPermissions.asData?.value ?? false;
+      // final isNotificationPermissionGranted =
+      //     appPermission.notificationPermissions.asData?.value ?? false;
+      // final isDndAccessPermissionGranted =
+      //     appPermission.dndInterruptionPermissions.asData?.value ?? false;
 
       // print("Is logged IN; $isLoggedIn");
 
       if (!isLoggedIn) {
         // debugPrint("We have entered now in not isLoggedIn.....");
         // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
-        if (splashScreenBoolean && isSplashRoute && isPermissionRequired) {
+        if (splashScreenBoolean && isSplashRoute && splashScreenBoolean) {
           return permissionsScreenPath;
         }
-        if ((splashScreenBoolean && isSplashRoute) || isHomeScreenPath) {
+        if ((splashScreenBoolean && isSplashRoute) || isHomeScreenRoute) {
           if (state.matchedLocation != authScreenPath) {
             // debugPrint("We have entered now in authscreepath");
             // debugPrint(
             //     "current route AFTER logic is: ${state.matchedLocation}");
             return authScreenPath;
           }
-        } else if (splashScreenBoolean && isAuthScreenPath) {
+        } else if (splashScreenBoolean && isAuthScreenRoute) {
           // debugPrint(
           //     "We have entered now in state.matched location - verification screen");
           // debugPrint("current route AFTER logic is: ${state.matchedLocation}");
@@ -116,9 +131,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       } else {
         // debugPrint("isLoggedIn.....");
         final isUserProfileExists = await ref
-            .read(cloudFirestoreProvider)
+            .read(cloudFirestoreController)
             .checkForExistingUserData(firebaseAuth.currentUser!.uid);
-        if (isAuthScreenPath || !isUserProfileExists) {
+        if (isAuthScreenRoute || !isUserProfileExists) {
           if (state.matchedLocation != editProfileScreenPath) {
             // debugPrint("We have entered now in editProfileScreen");
             // debugPrint(
@@ -140,7 +155,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     },
 
     // Automatically refresh the router when the Firebase user state changes
-    refreshListenable: GoRouterRefreshStream(firebaseAuth.authStateChanges()),
+    // refreshListenable: GoRouterRefreshStream(firebaseAuth.authStateChanges()),
     routes: [
       GoRoute(
         path: splashScreenPath,

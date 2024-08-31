@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
 import 'package:its_urgent/src/features/splash/splash_providers/splash_screen_provider.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 
@@ -49,12 +50,13 @@ class SplashScreen extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                
 
                 // change the splash screen boolean to true.
                 ref
                     .read(splashScreenBooleanProvider.notifier)
                     .onSplashScreenRemoved();
-                // then replace the splash screen route with auth screen route
+                // // then replace the splash screen route with auth screen route
                 context.goNamed(AppRoutes.permissionsScreen.name);
               },
               style: ElevatedButton.styleFrom(

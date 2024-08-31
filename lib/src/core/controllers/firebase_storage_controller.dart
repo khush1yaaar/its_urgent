@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const userImagesPath = 'userImages';
 
@@ -20,3 +21,8 @@ class FirebaseStorageController {
     return result.ref.getDownloadURL();
   }
 }
+
+
+final firebaseStorageController = Provider<FirebaseStorageController>((ref) {
+  return FirebaseStorageController(FirebaseStorage.instance);
+});

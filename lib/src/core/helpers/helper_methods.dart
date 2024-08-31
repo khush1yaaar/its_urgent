@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/services.dart';
 import 'package:focus_status/focus_status.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/user_ref.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
 
 /// helper constants
 enum NotificationType {
@@ -42,7 +44,7 @@ Future<int> getFocusStatus() async {
   } on PlatformException {
     focusStatusCode = 0;
   }
-  print('Focus Status: $focusStatusCode');
+  log('Focus Status: $focusStatusCode');
   return focusStatusCode;
 }
 
@@ -77,8 +79,8 @@ Future<void> showNotification(Map<String, dynamic> notificationData) async {
     final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('sendNotification');
     try {
       final HttpsCallableResult result = await callable(data);
-      print(result.data);
+      log(result.data);
     } catch (e) {
-      print('Exception: $e');
+      log('Exception: $e');
     }
   }

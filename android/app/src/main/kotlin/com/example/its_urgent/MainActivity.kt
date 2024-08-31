@@ -14,6 +14,7 @@ import android.os.Build.VERSION_CODES
 import android.app.NotificationManager
 import io.flutter.plugin.common.StandardMethodCodec
 
+
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.hsiharki.itsurgent/battery"
 
@@ -36,6 +37,10 @@ class MainActivity: FlutterActivity() {
             } else if (call.method == "getFocusStatus") {
                 val focusStatus = getFocusStatus()
                 result.success(focusStatus)
+            }
+            else if (call.method == "canBypassDnd"){
+                val interruptionLevel = canBypassDnd()
+                result.success(interruptionLevel)
             }
         }
 
@@ -73,5 +78,33 @@ class MainActivity: FlutterActivity() {
 
         return notificationManager.getCurrentInterruptionFilter()
         
+    }
+
+    private fun getImportance(): List<Map<String, Any>>? {
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channels = notificationManager.notificationChannels
+        return  channels.map { channel ->
+            mapOf(
+                "id" to channel.id,
+                "name" to channel.name,
+                "importance" to channel.importance,
+                "canBypassDnd" to channel.canBypassDnd(),
+                "description" to (channel.description ?: "")
+            )
+        }
+
+    }
+
+
+    private fun canBypassDnd(): Boolean {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channels = notificationManager.notificationChannels
+
+        // Assuming you want to check for a specific channel, e.g., "its_urgent_notifications"
+        val channel = channels.find { it.id == "its_urgent_notifications" }
+
+        // Return true if the channel exists and can bypass DND, otherwise false
+        return channel?.canBypassDnd() ?: false
     }
 }

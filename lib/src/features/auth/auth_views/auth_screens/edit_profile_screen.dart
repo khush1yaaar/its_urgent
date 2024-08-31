@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:its_urgent/src/commons/common_models/common_class_models/its_urgent_user.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
+import 'package:its_urgent/src/core/controllers/firebase_storage_controller.dart';
+import 'package:its_urgent/src/core/models/its_urgent_user.dart';
 import 'package:its_urgent/src/features/auth/models/data_constants/default_profile_image.dart';
-import 'package:its_urgent/src/commons/common_providers/cloud_firestore_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_storeage_provider.dart';
-import 'package:its_urgent/src/commons/common_providers/its_urgent_user_provider.dart';
+
+import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
+
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -49,13 +51,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final String uid = ref.read(firebaseAuthProvider).currentUser!.uid;
 
       // Get the FirebaseStorageController and CloudFirestoreController from Riverpod
-      final FirebaseStorageController = ref.read(firebaseStorageProvider);
-      final CloudFirestoreController = ref.read(cloudFirestoreProvider);
+      final firebaseStorage = ref.read(firebaseStorageController);
+      final cloudFirestore = ref.read(cloudFirestoreController);
 
       String imageUrl;
       // Step 1: if no image is selected directly uses the link of ui avatar, no need to upload it to the firebase storage.
       if (_imageFile != null) {
-        imageUrl = await FirebaseStorageController.getImageUrl(
+        imageUrl = await firebaseStorage.getImageUrl(
             uid, File(_imageFile!.path));
       } else {
         if (_currentUserImageUrl != null) {
@@ -66,11 +68,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
 
       // Step 2: Add or update the user data in Firestore
-      await CloudFirestoreController.addUser(
+      await cloudFirestore.addUser(
           uid: uid, name: _nameString, imageUrl: imageUrl);
 
       // Step 3: Update the user data in the app state
-      ref.read(itsUrgentUserProvider.notifier).updateUserDetails({
+      ref.read(itsUrgentUserController.notifier).updateUserDetails({
         UserDocFields.name.name: _nameString,
         UserDocFields.imageUrl.name: imageUrl,
         UserDocFields.uid.name: uid,
@@ -95,7 +97,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   void initState() {
     super.initState();
     // Fetch the current user's name and set it as the initial value of the controller
-    final currentUser = ref.read(itsUrgentUserProvider);
+    final currentUser = ref.read(itsUrgentUserController);
     if (currentUser != null) {
       _nameString = currentUser.name;
       _nameController.text = _nameString;

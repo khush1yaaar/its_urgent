@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:its_urgent/src/commons/common_providers/firebase_auth_provider.dart';
+import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_controller.dart';
 import 'package:its_urgent/src/features/auth/auth_providers/selected_country_provider.dart';
 
 class ConfirmDialog extends ConsumerStatefulWidget {
@@ -31,7 +31,7 @@ class _ConfirmDialogState extends ConsumerState<ConfirmDialog> {
     });
 
     try {
-      await ref.read(phoneAuthProvider).phoneAuthentication(
+      await ref.read(phoneAuthController).phoneAuthentication(
             context,
             widget.phoneCode,
             widget.phoneNumber.trim(),
