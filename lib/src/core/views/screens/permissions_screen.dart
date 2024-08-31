@@ -1,67 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
+import 'package:its_urgent/src/core/views/widgets/contacts_permission_instruction_dialog.dart';
+import 'package:its_urgent/src/core/views/widgets/dnd_permissions_instruction_dialog.dart';
 
-import 'package:its_urgent/src/core/views/widgets/device_contacts_permission_widget.dart';
-import 'package:its_urgent/src/core/views/widgets/dnd_override_permission_widget.dart';
-import 'package:its_urgent/src/core/views/widgets/notification_permissions_widget.dart';
+import 'package:its_urgent/src/core/views/widgets/permissions_tile_widget.dart';
 
-class PermissionsScreen extends ConsumerStatefulWidget {
+class PermissionsScreen extends ConsumerWidget {
   const PermissionsScreen({super.key});
 
   @override
-  ConsumerState<PermissionsScreen> createState() => _PermissionsScreenState();
-}
-
-class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appPermissions = ref.watch(permissionsController);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        child: Column(
-          children: <Widget>[
-            Hero(
-              tag: 'logo',
-              child: Image.asset(
-                'assets/cropped_image.png',
-                width: 100,
-                height: 100,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Hero(
+                tag: 'logo',
+                child: Image.asset(
+                  'assets/cropped_image.png',
+                  width: 250,
+                  height: 250,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: double.infinity,
-              height: 40,
-            ),
-            Text(
-              "Please provide the following permissions to continue:",
-              style: Theme.of(context).textTheme.titleMedium!,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Expanded(
-              child: ListView(
-                children: const [
-                  NotificationPermissionsWidget(),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  DeviceContactsPermissionsWidget(),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  DndOverridePermissionWidget(),
-                ],
+              const SizedBox(
+                width: double.infinity,
+                height: 40,
               ),
-            )
-          ],
+              if (appPermissions.isLoading) ...[
+                const Text("Loading permissions..."),
+                const SizedBox(
+                  height: 16,
+                ),
+                const CircularProgressIndicator(),
+              ] else ...[
+                Text(
+                  "Please grant the following permissions to continue: ",
+                  style: Theme.of(context).textTheme.titleMedium!,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ListView(
+                  shrinkWrap: true,
+                  children: const [
+                    PermissionsTileWidget(
+                      permissionType: 'notification',
+                      iconPath: 'assets/notifications.gif',
+                      grantedText: 'Notifications are enabled',
+                      deniedText: 'Notifications are disabled',
+                      instructionDialog: null,
+                    ),
+                    SizedBox(height: 8),
+                    PermissionsTileWidget(
+                      permissionType: 'dnd',
+                      iconPath: 'assets/dnd.gif',
+                      grantedText: 'Do Not Disturb Permissions granted',
+                      deniedText: 'Do Not Disturb Permissions denied',
+                      instructionDialog: DndPermissionsInstructionDialog(
+                        imagePath: 'assets/notifications.gif',
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    PermissionsTileWidget(
+                      permissionType: 'contacts',
+                      iconPath: 'assets/contacts.gif',
+                      grantedText: 'Contacts Permissions granted',
+                      deniedText: 'Contacts Permissions denied',
+                      instructionDialog: ContactsPermissionInstructionDialog(
+                        imagePath: 'assets/contacts.gif',
+                      ),
+                    ),
+                  ],
+                )
+              ]
+            ],
+          ),
         ),
       ),
     );

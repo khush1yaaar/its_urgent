@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
 
-class DndPermissionsInstructionDialog extends ConsumerStatefulWidget {
+class PermissionsInstructionDialog extends ConsumerStatefulWidget {
   final String imagePath;
+  final String title;
+  final Future<void> Function() requestPermission;
+  final bool Function(dynamic) permissionCheck;
 
-  const DndPermissionsInstructionDialog({
+  const PermissionsInstructionDialog({
     super.key,
     required this.imagePath,
+    required this.title,
+    required this.requestPermission,
+    required this.permissionCheck,
   });
 
   @override
-  ConsumerState<DndPermissionsInstructionDialog> createState() =>
-      _DndPermissionsInstructionDialogState();
+  ConsumerState<PermissionsInstructionDialog> createState() =>
+      _PermissionsInstructionDialogState();
 }
 
-class _DndPermissionsInstructionDialogState
-    extends ConsumerState<DndPermissionsInstructionDialog>
+class _PermissionsInstructionDialogState
+    extends ConsumerState<PermissionsInstructionDialog>
     with WidgetsBindingObserver {
   @override
   void initState() {
@@ -33,11 +39,9 @@ class _DndPermissionsInstructionDialogState
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      // Refresh notification permissions when the app resumes
-     await ref
-          .read(permissionsController.notifier)
-          .refreshPermissions();
-      if (ref.read(permissionsController).value?.dnd == true) {
+      // Refresh permissions when the app resumes
+      await ref.read(permissionsController.notifier).refreshPermissions();
+      if (widget.permissionCheck(ref.read(permissionsController).value)) {
         Navigator.of(context).pop();
       }
     }
@@ -58,11 +62,13 @@ class _DndPermissionsInstructionDialogState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                title: Text("Do Not Disturb Permissions",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                    textAlign: TextAlign.center),
+                title: Text(
+                  widget.title,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Image.asset(
                 widget.imagePath,
@@ -83,11 +89,7 @@ class _DndPermissionsInstructionDialogState
                   foregroundColor:
                       Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-                onPressed: () async {
-                  await ref
-                      .read(permissionsController.notifier)
-                      .setDndAccessPermission();
-                },
+                onPressed: widget.requestPermission,
                 child: const Text('Grant Permissions'),
               ),
             ],

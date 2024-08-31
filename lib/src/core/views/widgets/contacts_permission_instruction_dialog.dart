@@ -35,9 +35,9 @@ class _ContactsPermissionInstructionDialogState
     if (state == AppLifecycleState.resumed) {
       // Refresh notification permissions when the app resumes
     await  ref
-          .read(deviceContactsPermissionsController.notifier)
+          .read(permissionsController.notifier)
           .refreshPermissions();
-      if (ref.read(deviceContactsPermissionsController).value == true) {
+      if (ref.read(permissionsController).value?.contacts == true) {
         Navigator.of(context).pop();
       }
     }
@@ -85,7 +85,7 @@ class _ContactsPermissionInstructionDialogState
                 ),
                 onPressed: () async {
                   await ref
-                      .read(deviceContactsPermissionsController.notifier)
+                      .read(permissionsController.notifier)
                       .setContactPermission();
                 },
                 child: const Text('Grant Permissions'),

@@ -6,26 +6,67 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:focus_status/focus_status.dart';
-import 'package:its_urgent/src/core/models/app_permissions.dart';
 
-
-/// A controller to manage the notification permissions of the app using [AsyncNotifier].
-class NotificationPermissionsController extends AsyncNotifier<bool> {
+class PermissionsController extends AsyncNotifier<PermissionsState> {
   @override
-  FutureOr<bool> build() async {
-    return await _requestNotificationPermission();
+  FutureOr<PermissionsState> build() async {
+    return await _fetchPermissions();
+  }
+
+  Future<PermissionsState> _fetchPermissions() async {
+    final notificationPermissions = await _requestNotificationPermission();
+    final contactPermissions = await _requestContactsPermission();
+    final dndInterruptionPermissions = await _getDNDStatus();
+
+    return PermissionsState(
+      notification: notificationPermissions,
+      contacts: contactPermissions,
+      dnd: dndInterruptionPermissions,
+    );
   }
 
   Future<void> refreshPermissions() async {
-    final notificationPermissions = await _requestNotificationPermission();
-    state = AsyncData(notificationPermissions);
+    state = AsyncData(await _fetchPermissions());
   }
 
   Future<void> setNotificationPermission() async {
-    if (await _requestNotificationPermission()) {
-      state = const AsyncData(true);
-    } else {
+    final hasPermission = await _requestNotificationPermission();
+    final currentState = state.value ?? PermissionsState(
+      notification: false,
+      contacts: false,
+      dnd: false,
+    );
+    state = AsyncData(currentState.copyWith(notification: hasPermission));
+
+    if (!hasPermission) {
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+    }
+  }
+
+  Future<void> setContactPermission() async {
+    final hasPermission = await _requestContactsPermission();
+    final currentState = state.value ?? PermissionsState(
+      notification: false,
+      contacts: false,
+      dnd: false,
+    );
+    state = AsyncData(currentState.copyWith(contacts: hasPermission));
+
+    if (!hasPermission) {
+      await AppSettings.openAppSettings(type: AppSettingsType.settings);
+    }
+  }
+
+  Future<void> setDndAccessPermission() async {
+    final hasPermission = await _getDNDStatus();
+    final currentState = state.value ?? PermissionsState(
+      notification: false,
+      contacts: false,
+      dnd: false,
+    );
+    state = AsyncData(currentState.copyWith(dnd: hasPermission));
+
+    if (!hasPermission) {
       await AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
   }
@@ -41,78 +82,47 @@ class NotificationPermissionsController extends AsyncNotifier<bool> {
       provisional: false,
       sound: true,
     );
-
     return notificationSettings.authorizationStatus ==
         AuthorizationStatus.authorized;
   }
-}
 
-final notificationPermissionsController =
-    AsyncNotifierProvider<NotificationPermissionsController, bool>(() {
-  return NotificationPermissionsController();
-});
-
-
-/// A controller to manage the device contacts permissions of the app using [AsyncNotifier].
-class DeviceContactsPermissionsController extends AsyncNotifier<bool> {
-  @override
-  FutureOr<bool> build() async {
-    return await _requestContactsPermission();
-  }
-
-  Future<void> refreshPermissions() async {
-    final contactPermissions = await _requestContactsPermission();
-    state = AsyncData(contactPermissions);
-  }
-
-  Future<void> setContactPermission() async {
-    if (await _requestContactsPermission()) {
-      state = const AsyncData(true);
-    } else {
-      await AppSettings.openAppSettings(type: AppSettingsType.settings);
-    }
-  }
-
-  Future<bool> _requestContactsPermission() =>
-      FlutterContacts.requestPermission(readonly: true);
-}
-
-final deviceContactsPermissionsController =
-    AsyncNotifierProvider<DeviceContactsPermissionsController, bool>(() {
-  return DeviceContactsPermissionsController();
-});
-
-
-/// A controller to manage the DND permissions of the app using [AsyncNotifier].
-class DndInterruptionPermissionsController extends AsyncNotifier<bool> {
-  @override
-  FutureOr<bool> build() async {
-    return await _getDNDStatus();
-  }
-
-  Future<void> refreshPermissions() async {
-    final dndInterruptionPermissions = await _getDNDStatus();
-    state = AsyncData(dndInterruptionPermissions);
-  }
-
-  Future<void> setDndAccessPermission() async {
-   if (await _getDNDStatus()) {
-      state = const AsyncData(true);
-    } else {
-      await AppSettings.openAppSettings(type: AppSettingsType.settings);
-    }
+  Future<bool> _requestContactsPermission() async {
+    return await FlutterContacts.requestPermission(readonly: true);
   }
 
   Future<bool> _getDNDStatus() async {
     const platform = MethodChannel('com.hsiharki.itsurgent/battery');
-
     final dnd = await platform.invokeMethod<bool>('canBypassDnd');
-    log("dnd permissions: $dnd");
+    log("DND permissions: $dnd");
     return dnd ?? false;
   }
 }
 
-final dndInterruptionPermissionsController =
-    AsyncNotifierProvider<DndInterruptionPermissionsController, bool>(() {
-  return DndInterruptionPermissionsController();
-});
+
+class PermissionsState {
+  final bool notification;
+  final bool contacts;
+  final bool dnd;
+
+  PermissionsState({
+    required this.notification,
+    required this.contacts,
+    required this.dnd,
+  });
+
+  PermissionsState copyWith({
+    bool? notification,
+    bool? contacts,
+    bool? dnd,
+  }) {
+    return PermissionsState(
+      notification: notification ?? this.notification,
+      contacts: contacts ?? this.contacts,
+      dnd: dnd ?? this.dnd,
+    );
+  }
+}
+
+final permissionsController = AsyncNotifierProvider<PermissionsController, PermissionsState>(
+  () => PermissionsController(),
+);
