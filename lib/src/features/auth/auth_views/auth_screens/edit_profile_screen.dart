@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
 import 'package:its_urgent/src/core/controllers/firebase_storage_controller.dart';
 import 'package:its_urgent/src/core/models/its_urgent_user.dart';
+import 'package:its_urgent/src/core/views/widgets/elevated_button_with_icon.dart';
 import 'package:its_urgent/src/features/auth/models/data_constants/default_profile_image.dart';
 
 import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
@@ -57,8 +58,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       String imageUrl;
       // Step 1: if no image is selected directly uses the link of ui avatar, no need to upload it to the firebase storage.
       if (_imageFile != null) {
-        imageUrl = await firebaseStorage.getImageUrl(
-            uid, File(_imageFile!.path));
+        imageUrl =
+            await firebaseStorage.getImageUrl(uid, File(_imageFile!.path));
       } else {
         if (_currentUserImageUrl != null) {
           imageUrl = _currentUserImageUrl!;
@@ -158,8 +159,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             )
                           : null,
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     if (_imageFile != null)
-                      TextButton(
+                      TextButton.icon(
+                        icon: const Icon(Icons.close),
                         onPressed: () {
                           setState(() {
                             _imageFile = null;
@@ -168,24 +173,55 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         style: TextButton.styleFrom(
                             foregroundColor:
                                 Theme.of(context).colorScheme.error),
-                        child: const Text(
+                        label: const Text(
                           "Remove Image",
                         ),
                       ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextButton(
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.add_a_photo,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                           onPressed: () {
                             _pickImage(ImageSource.camera);
                           },
-                          child: const Text("Image from Camera"),
+                          label: Text(
+                            "Image from Camera",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  decoration: TextDecoration.underline,
+                                  decorationThickness: 2,
+                                  decorationColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
                         ),
-                        TextButton(
+                        TextButton.icon(
+                          icon: Icon(
+                            Icons.photo,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                           onPressed: () {
                             _pickImage(ImageSource.gallery);
                           },
-                          child: const Text("Image from Gallery"),
+                          label: Text(
+                            "Image from Gallery",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  decoration: TextDecoration.underline,
+                                  decorationThickness: 2,
+                                  decorationColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
                         ),
                       ],
                     ),
@@ -215,6 +251,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     if (_uploadErrorText != null)
                       SizedBox(
                         width: double.infinity,
+                        height: 28,
                         child: Text(
                           _uploadErrorText!,
                           textAlign: TextAlign.start,
@@ -228,22 +265,38 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                           .colorScheme
                                           .onSurface),
                         ),
-                      )
+                      ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      leading: const Icon(
+                        Icons.security,
+                      ),
+                      title: const Text(
+                        "Setup challenge here",
+                      ),
+                      subtitle: const Text(
+                        "Status: Not set.",
+                      ),
+                      onTap: () {
+                        
+                      },
+                      trailing: const Icon(Icons.warning),
+                    ),
                   ],
                 ),
               ),
             ),
-            ElevatedButton(
+            ElevatedButtonWithIcon(
               onPressed: _nameString.length < 2
                   ? null
                   : () {
                       _updateProfile(context);
                     },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                foregroundColor:
-                    Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
               child: const Text("Next"),
             ),
           ],

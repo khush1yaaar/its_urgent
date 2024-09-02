@@ -95,7 +95,7 @@ class _DndPermissionsInstructionDialogState
                   width: double.infinity,
                   child: ElevatedButtonWithIcon(
                     icon: const Icon(Icons.open_in_new),
-                    lable: "Grant Permissions",
+                    child: const Text("Grant Permissions"),
                     onPressed: () async {
                       await ref
                           .read(permissionsController.notifier)

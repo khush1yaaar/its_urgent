@@ -23,7 +23,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -91,7 +90,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                             .onSplashScreenRemoved();
                         context.goNamed(AppRoutes.permissionsScreen.name);
                       },
-                      lable: 'Get Started',
+                      child: const Text("Get Started"),
                     ),
                   ]
                       .animate(delay: 300.ms, interval: 300.ms)

@@ -5,13 +5,13 @@ class ElevatedButtonWithIcon extends ConsumerWidget {
   const ElevatedButtonWithIcon({
     super.key,
     this.icon,
-    required this.lable,
+   required this.child,
     required this.onPressed,
   });
 
   final Icon? icon;
-  final String lable;
-  final VoidCallback onPressed;
+  final Widget child;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +27,7 @@ class ElevatedButtonWithIcon extends ConsumerWidget {
         foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       onPressed: onPressed,
-      label: Text(lable),
+      label: child
     );
   }
 }

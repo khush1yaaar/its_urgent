@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
+import 'package:its_urgent/src/core/views/widgets/elevated_button_with_icon.dart';
 
 class ContactsPermissionInstructionDialog extends ConsumerStatefulWidget {
   final String imagePath;
@@ -91,26 +92,15 @@ class _ContactsPermissionInstructionDialogState
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
+                  child: ElevatedButtonWithIcon(
                     icon: const Icon(Icons.open_in_new_rounded),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primaryContainer,
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
+                   
                     onPressed: () async {
                       await ref
                           .read(permissionsController.notifier)
                           .setContactPermission();
                     },
-                    label: const Text('Grant Permissions'),
+                    child: const Text('Grant Permissions'),
                   ),
                 ),
               ],

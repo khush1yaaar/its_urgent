@@ -23,8 +23,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
-  bool _notificationPermission = false;
-
   bool _isLoading = false;
 
   Future<void> _init() async {
@@ -36,19 +34,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     await ref.read(notificationInstanceProvider).setupToken();
 
-    _notificationPermission = await ref
-        .read(notificationInstanceProvider)
-        .requestNotificationPermission();
-    setState(() {});
     // await ref.read(deviceContactsProvider.notifier).fetchContacts();\
 
-    ref.read(notificationInstanceProvider).notificationForegroundListener(context);
+    ref
+        .read(notificationInstanceProvider)
+        .notificationForegroundListener(context);
     // await setupInteractedMessage();
 
     // listenActionStream(){
     //     AwesomeNotifications().actionStream.listen((receivedAction) {
     //       var payload = receivedAction.payload;
-    
+
     //       if(receivedAction.channelKey == 'normal_channel'){
     //         //do something here
     //       }
@@ -56,37 +52,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     //   }
   }
 
-  
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+
     _init();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      log("App Resumed");
-      _notificationPermission = await ref
-          .read(notificationInstanceProvider)
-          .requestNotificationPermission();
-
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   @override
@@ -113,20 +83,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : _notificationPermission
-                ? const ContactsWidget()
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PermissionButtonWidget(
-                        title: "Notification Permissions Denied",
-                        subtitle:
-                            "Tap here to go to device settings to grant notification permissions",
-                        iconData: Icons.notifications_active,
-                        onPressed: () {
-                          AppSettings.openAppSettings(
-                              type: AppSettingsType.notification);
-                        }),
-                  ),
+            : const ContactsWidget(),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             context.goNamed(AppRoutes.challengeScreen.name, queryParameters: {

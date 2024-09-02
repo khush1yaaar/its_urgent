@@ -27,7 +27,7 @@ class PhoneAuthController {
           }
         },
         codeSent: (String verificationId, int? resendToken) {
-          GoRouter.of(context).pop();
+         Navigator.of(context).pop();
           //remove the dialog
           context.goNamed(
             AppRoutes.smsCodeScreen.name,

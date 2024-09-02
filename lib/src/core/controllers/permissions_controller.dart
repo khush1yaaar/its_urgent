@@ -6,11 +6,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/core/models/permissions_state.dart';
 
 class PermissionsController extends AsyncNotifier<PermissionsState> {
   @override
   FutureOr<PermissionsState> build() async {
-   return await _fetchPermissions();
+    return await _fetchPermissions();
   }
 
   Future<PermissionsState> _fetchPermissions() async {
@@ -18,19 +19,18 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
     final contactPermissions = await _requestContactsPermission();
     final dndInterruptionPermissions = await _getDNDStatus();
 
-
     final allPermissionsGranted = notificationPermissions &&
         contactPermissions &&
         dndInterruptionPermissions;
 
     // Update the allPermissionsGrantedProvider state
-    ref.read(allPermissionsGrantedProvider.notifier).state = allPermissionsGranted;
+    ref.read(allPermissionsGrantedProvider.notifier).state =
+        allPermissionsGranted;
 
     return PermissionsState(
       notification: notificationPermissions,
       contacts: contactPermissions,
       dnd: dndInterruptionPermissions,
-      isOnceAsked: true,
     );
   }
 
@@ -45,7 +45,6 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
           notification: false,
           contacts: false,
           dnd: false,
-          isOnceAsked: true,
         );
     state = AsyncData(currentState.copyWith(notification: hasPermission));
 
@@ -61,7 +60,6 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
           notification: false,
           contacts: false,
           dnd: false,
-          isOnceAsked: true,
         );
     state = AsyncData(currentState.copyWith(contacts: hasPermission));
 
@@ -77,7 +75,6 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
           notification: false,
           contacts: false,
           dnd: false,
-          isOnceAsked: true,
         );
     state = AsyncData(currentState.copyWith(dnd: hasPermission));
 
@@ -87,6 +84,8 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
   }
 
   Future<bool> _requestNotificationPermission() async {
+
+    
     final notificationSettings =
         await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -102,6 +101,7 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
   }
 
   Future<bool> _requestContactsPermission() async {
+    
     return await FlutterContacts.requestPermission(readonly: true);
   }
 
@@ -113,39 +113,15 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
   }
 }
 
-class PermissionsState {
-  final bool notification;
-  final bool contacts;
-  final bool dnd;
-  final bool isOnceAsked;
-
-  PermissionsState({
-    required this.notification,
-    required this.contacts,
-    required this.dnd,
-    this.isOnceAsked = false,
-  });
-
-  PermissionsState copyWith({
-    bool? notification,
-    bool? contacts,
-    bool? dnd,
-    bool? isOnceAsked,
-  }) {
-    return PermissionsState(
-      notification: notification ?? this.notification,
-      contacts: contacts ?? this.contacts,
-      dnd: dnd ?? this.dnd,
-    );
-  }
-}
-
 final permissionsController =
     AsyncNotifierProvider<PermissionsController, PermissionsState>(
   () => PermissionsController(),
 );
 
 
+
+
+/// Provider to keep track of all permissions granted
 final allPermissionsGrantedProvider = StateProvider<bool>((ref) {
   // Initial value could be false, or you could calculate based on an initial check.
   return false;
