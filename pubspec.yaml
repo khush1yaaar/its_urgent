@@ -40,6 +40,8 @@ dependencies:
       ref: main
   awesome_notifications: ^0.9.3+1
   flutter_native_splash: ^2.4.1
+  flutter_animate: ^4.5.0
+  shadcn_ui: ^0.8.1
 
 
   

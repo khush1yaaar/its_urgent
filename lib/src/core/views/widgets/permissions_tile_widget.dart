@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
 
@@ -125,7 +126,7 @@ class _PermissionsWidgetState extends ConsumerState<PermissionsTileWidget>
           shape: RoundedRectangleBorder(
             side: BorderSide(
                 color: Theme.of(context).colorScheme.primary, width: 1),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(10),
           ),
           leading: Icon(icon),
           title: Text(text),
