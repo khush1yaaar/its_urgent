@@ -124,10 +124,8 @@ class _PermissionsWidgetState extends ConsumerState<PermissionsTileWidget>
         return ListTile(
           shape: RoundedRectangleBorder(
             side: BorderSide(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(5),
+                color: Theme.of(context).colorScheme.primary, width: 1),
+            borderRadius: BorderRadius.circular(8),
           ),
           leading: Icon(icon),
           title: Text(text),

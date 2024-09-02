@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PermissionsController extends AsyncNotifier<PermissionsState> {
   @override
   FutureOr<PermissionsState> build() async {
-    return await _fetchPermissions();
+   return await _fetchPermissions();
   }
 
   Future<PermissionsState> _fetchPermissions() async {
@@ -18,10 +18,19 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
     final contactPermissions = await _requestContactsPermission();
     final dndInterruptionPermissions = await _getDNDStatus();
 
+
+    final allPermissionsGranted = notificationPermissions &&
+        contactPermissions &&
+        dndInterruptionPermissions;
+
+    // Update the allPermissionsGrantedProvider state
+    ref.read(allPermissionsGrantedProvider.notifier).state = allPermissionsGranted;
+
     return PermissionsState(
       notification: notificationPermissions,
       contacts: contactPermissions,
       dnd: dndInterruptionPermissions,
+      isOnceAsked: true,
     );
   }
 
@@ -31,11 +40,13 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
 
   Future<void> setNotificationPermission() async {
     final hasPermission = await _requestNotificationPermission();
-    final currentState = state.value ?? PermissionsState(
-      notification: false,
-      contacts: false,
-      dnd: false,
-    );
+    final currentState = state.value ??
+        PermissionsState(
+          notification: false,
+          contacts: false,
+          dnd: false,
+          isOnceAsked: true,
+        );
     state = AsyncData(currentState.copyWith(notification: hasPermission));
 
     if (!hasPermission) {
@@ -45,11 +56,13 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
 
   Future<void> setContactPermission() async {
     final hasPermission = await _requestContactsPermission();
-    final currentState = state.value ?? PermissionsState(
-      notification: false,
-      contacts: false,
-      dnd: false,
-    );
+    final currentState = state.value ??
+        PermissionsState(
+          notification: false,
+          contacts: false,
+          dnd: false,
+          isOnceAsked: true,
+        );
     state = AsyncData(currentState.copyWith(contacts: hasPermission));
 
     if (!hasPermission) {
@@ -59,11 +72,13 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
 
   Future<void> setDndAccessPermission() async {
     final hasPermission = await _getDNDStatus();
-    final currentState = state.value ?? PermissionsState(
-      notification: false,
-      contacts: false,
-      dnd: false,
-    );
+    final currentState = state.value ??
+        PermissionsState(
+          notification: false,
+          contacts: false,
+          dnd: false,
+          isOnceAsked: true,
+        );
     state = AsyncData(currentState.copyWith(dnd: hasPermission));
 
     if (!hasPermission) {
@@ -98,22 +113,24 @@ class PermissionsController extends AsyncNotifier<PermissionsState> {
   }
 }
 
-
 class PermissionsState {
   final bool notification;
   final bool contacts;
   final bool dnd;
+  final bool isOnceAsked;
 
   PermissionsState({
     required this.notification,
     required this.contacts,
     required this.dnd,
+    this.isOnceAsked = false,
   });
 
   PermissionsState copyWith({
     bool? notification,
     bool? contacts,
     bool? dnd,
+    bool? isOnceAsked,
   }) {
     return PermissionsState(
       notification: notification ?? this.notification,
@@ -123,6 +140,13 @@ class PermissionsState {
   }
 }
 
-final permissionsController = AsyncNotifierProvider<PermissionsController, PermissionsState>(
+final permissionsController =
+    AsyncNotifierProvider<PermissionsController, PermissionsState>(
   () => PermissionsController(),
 );
+
+
+final allPermissionsGrantedProvider = StateProvider<bool>((ref) {
+  // Initial value could be false, or you could calculate based on an initial check.
+  return false;
+});

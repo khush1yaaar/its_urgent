@@ -6,11 +6,18 @@ import 'package:its_urgent/src/core/views/widgets/dnd_permissions_instruction_di
 
 import 'package:its_urgent/src/core/views/widgets/permissions_tile_widget.dart';
 
-class PermissionsScreen extends ConsumerWidget {
+class PermissionsScreen extends ConsumerStatefulWidget {
   const PermissionsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PermissionsScreen> createState() => _PermissionsScreenState();
+}
+
+class _PermissionsScreenState extends ConsumerState<PermissionsScreen> {
+
+
+  @override
+  Widget build(BuildContext context) {
     final appPermissions = ref.watch(permissionsController);
     return Scaffold(
       appBar: AppBar(),

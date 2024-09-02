@@ -34,9 +34,7 @@ class _ContactsPermissionInstructionDialogState
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       // Refresh notification permissions when the app resumes
-    await  ref
-          .read(permissionsController.notifier)
-          .refreshPermissions();
+      await ref.read(permissionsController.notifier).refreshPermissions();
       if (ref.read(permissionsController).value?.contacts == true) {
         Navigator.of(context).pop();
       }
@@ -49,48 +47,74 @@ class _ContactsPermissionInstructionDialogState
     final size = MediaQuery.of(context).size;
 
     return Dialog.fullscreen(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ListTile(
-                title: Text("Device Contacts Permissions",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                    textAlign: TextAlign.center),
-              ),
-              Image.asset(
-                widget.imagePath,
-                height: size.height * 0.7,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'To follow these instructions, press the button below',
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onPrimaryContainer,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Device Contacts Permissions'),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: size.height * 0.6,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 1,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      widget.imagePath,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-                onPressed: () async {
-                  await ref
-                      .read(permissionsController.notifier)
-                      .setContactPermission();
-                },
-                child: const Text('Grant Permissions'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const Text(
+                  'To follow these instructions, press the button below',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    onPressed: () async {
+                      await ref
+                          .read(permissionsController.notifier)
+                          .setContactPermission();
+                    },
+                    label: const Text('Grant Permissions'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
