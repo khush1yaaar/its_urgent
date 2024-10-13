@@ -23,14 +23,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
-  bool _isLoading = false;
-
   Future<void> _init() async {
-    final user = ref.read(itsUrgentUserController);
-    if (user == null) {
-      final uid = ref.read(firebaseAuthProvider).currentUser!.uid;
-      await ref.read(cloudFirestoreController).checkForExistingUserData(uid);
-    }
+    
 
     await ref.read(notificationInstanceProvider).setupToken();
 
@@ -62,35 +56,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("It's Urgent"),
-          actions: [
-            IconButton(
-              onPressed: () async {
-                await ref.read(deviceContactsProvider.notifier).fetchContacts();
-              },
-              icon: const Icon(Icons.refresh),
-            ),
-            IconButton(
-              onPressed: () async {
-                await ref.read(phoneAuthController).signOut();
-              },
-              icon: const Icon(Icons.logout),
-            ),
-          ],
-        ),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : const ContactsWidget(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            context.goNamed(AppRoutes.challengeScreen.name, queryParameters: {
-              'name': 'John Doe',
-            });
-          },
-          child: const Icon(Icons.input),
-        ));
+      appBar: AppBar(
+        title: const Text("It's Urgent"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await ref.read(deviceContactsProvider.notifier).fetchContacts();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: () async {
+              await ref.read(phoneAuthController).signOut();
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: const Center(
+        child: DeviceContactsWidget(),
+      ),
+    );
   }
 }

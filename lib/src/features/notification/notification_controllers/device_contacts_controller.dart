@@ -8,53 +8,52 @@ import 'package:its_urgent/src/features/notification/notification_models/app_con
 import 'package:its_urgent/src/features/notification/notification_models/device_contact_state.dart';
 import 'package:its_urgent/src/features/notification/notification_models/non_app_contact.dart';
 
-class DeviceContactsController extends Notifier<DeviceContactsState> {
+class DeviceContactsController extends AsyncNotifier<List<Contact>> {
   @override
-  DeviceContactsState build() {
-    fetchContacts();
-    return DeviceContactsState();
+  Future<List<Contact>> build() async {
+    state = AsyncLoading();
+
+    return await fetchContacts();
   }
 
-  Future<void> fetchContacts() async {
-    final permission = await _requestPermission();
-    if (!permission) {
-      state = state.copyWith(permissionDenied: true);
-      return;
+  Future<List<Contact>> fetchContacts() async {
+     // Request permission and handle denied permission
+    final permissionGranted = await _requestPermission();
+    if (!permissionGranted) {
+      state = AsyncError(Exception('Permission denied'), StackTrace.current);
+      return [];
     }
 
     // Get all device contacts
     final List<Contact> deviceContacts = await _getContacts();
 
-    // Fetch userRefs from cloud_firestore
-    final List<UserRef> firestoreUserRefs =
-        await ref.read(cloudFirestoreController).fetchUsersRefs();
+    // Check if device contacts are empty
+    if (deviceContacts.isEmpty) {
+      state = const AsyncData([]); // Update with empty list
+      return [];
+    }
 
-    // Use compute for filtering app contacts
-    final appContactsResult = await compute(_filterAppContacts, {
-      'firestoreUserRefs': firestoreUserRefs,
-      'deviceContacts': deviceContacts,
-    });
+    state = AsyncData(deviceContacts); // Update with fetched contacts
+    return deviceContacts;
 
-    final List<UserRef> appContactsUserRefs =
-        appContactsResult['appContactsUserRefs'];
-    final List<Contact> remainingDeviceContacts =
-        appContactsResult['remainingDeviceContacts'];
+    // // Fetch userRefs from Firestore
+    // final List<UserRef> firestoreUserRefs =
+    //     await ref.read(cloudFirestoreController).fetchUsersRefs();
 
-    // Fetch app contacts from firestore
-    final List<AppContact> appContacts = await ref
-        .read(cloudFirestoreController)
-        .fetchUsersFromFirestore(appContactsUserRefs);
+    // // Filter app and non-app contacts
+    // final Map<String, dynamic> contactResults =
+    //     _filterContacts(deviceContacts, firestoreUserRefs);
 
-    // Use compute for converting remaining contacts to non-app contacts
-    final List<NonAppContact> nonAppContacts =
-        await compute(_filterNonAppContacts, remainingDeviceContacts);
+    // final List<AppContact> appContacts = await ref
+    //     .read(cloudFirestoreController)
+    //     .fetchUsersFromFirestore(contactResults['appContactsUserRefs']);
 
-    // Update the state
-    state = DeviceContactsState(
-      nonAppContacts: nonAppContacts,
-      appContacts: appContacts,
-      permissionDenied: false,
-    );
+    // // Update state with the results
+    // state = DeviceContactsState(
+    //   nonAppContacts: contactResults['nonAppContacts'],
+    //   appContacts: appContacts,
+    //   permissionDenied: false,
+    // );
   }
 
   // Private methods
@@ -65,34 +64,34 @@ class DeviceContactsController extends Notifier<DeviceContactsState> {
   Future<List<Contact>> _getContacts() async {
     return await FlutterContacts.getContacts(withProperties: true);
   }
-}
 
-// Helper functions for compute
-Map<String, dynamic> _filterAppContacts(Map<String, dynamic> data) {
-  final List<UserRef> firestoreUserRefs = data['firestoreUserRefs'];
-  final List<Contact> deviceContacts =
-      List<Contact>.from(data['deviceContacts']);
+  // Filter app contacts and non-app contacts
+  // Map<String, dynamic> _filterContacts(
+  //     List<Contact> deviceContacts, List<UserRef> firestoreUserRefs) {
+  //   final List<UserRef> appContactsUserRefs = [];
+  //   final List<NonAppContact> nonAppContacts = [];
 
-  final List<UserRef> appContactsUserRefs = firestoreUserRefs.where((user) {
-    final contactIndex = deviceContacts.indexWhere((contact) =>
-        contact.phones.isNotEmpty &&
-        user.phoneNumber == contact.phones.first.number.formattedPhoneNumber);
-    if (contactIndex != -1) {
-      deviceContacts.removeAt(contactIndex);
-      return true;
-    }
-    return false;
-  }).toList();
+  //   for (final contact in deviceContacts) {
+  //     if (contact.phones.isNotEmpty) {
+  //       final formattedNumber = contact.phones.first.number.formattedPhoneNumber;
 
-  return {
-    'appContactsUserRefs': appContactsUserRefs,
-    'remainingDeviceContacts': deviceContacts,
-  };
-}
+  //       // Check if the contact matches any user in Firestore
+  //       final matchingUser = firestoreUserRefs.firstWhere(
+  //         (user) => user.phoneNumber == formattedNumber,
 
-List<NonAppContact> _filterNonAppContacts(List<Contact> deviceContacts) {
-  return deviceContacts
-      .where((contact) => contact.phones.isNotEmpty)
-      .map((contact) => NonAppContact.fromContact(contact))
-      .toList();
+  //       );
+
+  //       if (matchingUser != null) {
+  //         appContactsUserRefs.add(matchingUser);
+  //       } else {
+  //         nonAppContacts.add(NonAppContact.fromContact(contact));
+  //       }
+  //     }
+  //   }
+
+  //   return {
+  //     'appContactsUserRefs': appContactsUserRefs,
+  //     'nonAppContacts': nonAppContacts,
+  //   };
+  // }
 }
