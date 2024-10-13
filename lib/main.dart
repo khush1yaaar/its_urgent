@@ -63,7 +63,7 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-const kIP = '192.168.0.38'; // for physical devices
+const kIP = '192.168.0.35'; // for physical devices
 const kLOCALHOST = '127.0.0.1'; // for emulators
 
 // Firebase emulators Setup

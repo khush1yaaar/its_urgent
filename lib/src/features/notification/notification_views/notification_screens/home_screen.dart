@@ -24,8 +24,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with WidgetsBindingObserver {
   Future<void> _init() async {
-    
-
     await ref.read(notificationInstanceProvider).setupToken();
 
     // await ref.read(deviceContactsProvider.notifier).fetchContacts();\
@@ -57,7 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("It's Urgent"),
+        title: const Text("It's "),
         actions: [
           IconButton(
             onPressed: () async {
