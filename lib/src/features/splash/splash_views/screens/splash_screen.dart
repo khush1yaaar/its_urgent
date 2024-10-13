@@ -18,7 +18,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    FlutterNativeSplash.remove();
+    // FlutterNativeSplash.remove();
   }
 
   @override

@@ -55,7 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("It's "),
+        title: const Text("It's Urgent"),
         actions: [
           IconButton(
             onPressed: () async {
