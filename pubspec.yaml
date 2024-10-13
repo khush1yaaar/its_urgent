@@ -13,23 +13,22 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
-  firebase_core: ^2.31.1
+  firebase_core: ^3.6.0
   flutter_riverpod: ^2.5.1
   go_router: ^14.1.3
-  firebase_auth: ^4.19.6
+  firebase_auth: ^5.3.1
   google_fonts: ^6.2.1
-  firebase_ui_auth: ^1.14.0
   pinput: ^5.0.0
   flutter_libphonenumber: ^2.2.3
   transparent_image: ^2.0.1
   image_picker: ^1.1.2
-  cloud_firestore: ^4.17.5
-  firebase_storage: ^11.7.7
-  firebase_messaging: ^14.9.4
+  cloud_firestore: ^5.4.4
+  firebase_storage: ^12.3.3
+  firebase_messaging: ^15.1.3
   flutter_contacts: ^1.1.8
   app_settings: ^5.1.1
   url_launcher: ^6.3.0
-  cloud_functions: ^4.7.6
+  cloud_functions: ^5.1.3
   
   # focus_status:
   #     path: D:/flutter_plugins/focus_status
@@ -41,7 +40,8 @@ dependencies:
   awesome_notifications: ^0.9.3+1
   flutter_native_splash: ^2.4.1
   flutter_animate: ^4.5.0
-  shadcn_ui: ^0.8.1
+  shared_preferences: ^2.3.2
+  
 
 
   
@@ -51,7 +51,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true

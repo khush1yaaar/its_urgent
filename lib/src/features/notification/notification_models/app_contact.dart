@@ -8,6 +8,9 @@ class AppContact extends ItsUrgentUser {
     required super.imageUrl,
     required super.deviceToken,
     required super.uid,
+    required super.question,
+    required super.answer,
+    required super.answerType,
     required this.phoneNumber,
   });
 

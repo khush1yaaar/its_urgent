@@ -63,15 +63,15 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-const kIP = '192.168.0.131'; // for physical devices
+const kIP = '192.168.0.38'; // for physical devices
 const kLOCALHOST = '127.0.0.1'; // for emulators
 
 // Firebase emulators Setup
 Future<void> setupEmulators() async {
-  await FirebaseAuth.instance.useAuthEmulator(kLOCALHOST, 9099);
-  FirebaseFirestore.instance.useFirestoreEmulator(kLOCALHOST, 8080);
-  await FirebaseStorage.instance.useStorageEmulator(kLOCALHOST, 9199);
-  FirebaseFunctions.instance.useFunctionsEmulator(kLOCALHOST, 5001);
+  await FirebaseAuth.instance.useAuthEmulator(kIP, 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator(kIP, 8080);
+  await FirebaseStorage.instance.useStorageEmulator(kIP, 9199);
+  FirebaseFunctions.instance.useFunctionsEmulator(kIP, 5001);
 }
 
 /// see ["https://firebase.google.com/docs/cloud-messaging/flutter/receive#:~:text=Handle%20background%20messages"]

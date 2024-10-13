@@ -6,6 +6,7 @@ import 'package:its_urgent/src/core/models/its_urgent_user.dart';
 import 'package:its_urgent/src/core/models/user_ref.dart';
 import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
 import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
+import 'package:its_urgent/src/features/auth/models/class_models/challenge.dart';
 import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
 
 const usersCollectionPath = 'users';
@@ -35,11 +36,14 @@ class CloudFirestoreController {
   Future<void> addUser(
       {required String uid,
       required String name,
-      required String imageUrl}) async {
+      required String imageUrl, required Challenge challenge}) async {
     await _db.collection(usersCollectionPath).doc(uid).set(
       {
         UserDocFields.name.name: name,
         UserDocFields.imageUrl.name: imageUrl,
+        UserDocFields.question.name: challenge.question,
+        UserDocFields.answer.name: challenge.answer,
+        UserDocFields.answerType.name: challenge.answerType,
       },
       SetOptions(merge: true),
     );
@@ -88,6 +92,12 @@ class CloudFirestoreController {
       for (var userRef in userRefs) userRef.uid: userRef.phoneNumber
     };
 
+    // Check if the userRefs list is empty
+  if (userRefs.isEmpty) {
+    log("No user references provided. Skipping Firestore query.");
+    return []; // Return an empty list to avoid the query.
+  }
+
     final List<AppContact> users = [];
     try {
       final List<UserUid> userIds =
@@ -105,11 +115,16 @@ class CloudFirestoreController {
           imageUrl: doc[UserDocFields.imageUrl.name],
           deviceToken: doc[UserDocFields.deviceToken.name],
           phoneNumber: userIdToPhoneNumber[doc.id]!,
+          question: doc[UserDocFields.question.name] ?? "No question",
+          answer: doc[UserDocFields.answer.name] ?? "No answer",
+          answerType: doc[UserDocFields.answerType.name] ?? "No answer type",
+          
+         
         );
         users.add(user);
       }
     } catch (e) {
-      log("Error fetching users from Firestore: $e");
+      log("Error fetching users from Firestore (error here): $e");
     }
 
     return users;

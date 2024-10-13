@@ -107,7 +107,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           _phoneNumberController.text);
                     }
                   : null,
-              child: const Text("Get Started"),
+              child: const Text("Next"),
             ),
           ],
         ),
