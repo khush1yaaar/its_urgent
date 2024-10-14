@@ -35,7 +35,7 @@ enum AppRoutes {
   countrySelectorScreen,
   smsCodeScreen,
   editProfileScreen,
-  challengeScreen,
+
 }
 
 // Const route paths
@@ -48,7 +48,7 @@ const countrySelectorScreenPath = '/countrySelectorScreen';
 const editProfileScreenPath = '/editProfileScreen';
 final smsCodeScreenPath =
     'smsCodeScreen/:${PathParams.phoneNumber.name}/:${PathParams.verificationId.name}';
-const challengeScreenPath = '/challengeScreen';
+
 const permissionsScreenPath = '/permissionsScreen';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -166,21 +166,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.editProfileScreen.name,
         builder: (context, state) => const EditProfileScreen(),
       ),
-      GoRoute(
-        path: challengeScreenPath,
-        name: AppRoutes.challengeScreen.name,
-        builder: (context, state) {
-          final name = state.uri.queryParameters['name']!;
-
-          final senderUid = state.uri.queryParameters['senderUid']!;
-          final receiverUid = state.uri.queryParameters['receiverUid']!;
-          return ChallengeScreen(
-              name: name,
-              focusStatus: 2,
-              senderUid: senderUid,
-              receiverUid: receiverUid);
-        },
-      ),
+      
     ],
     errorBuilder: (context, state) => const ErrorScreen(),
   );

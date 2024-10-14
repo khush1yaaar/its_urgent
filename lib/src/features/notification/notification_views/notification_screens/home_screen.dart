@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_controller.dart';
+import 'package:its_urgent/src/features/notification/notification_controllers/combined_contacts_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_controllers/notification_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/app_contacts_widget.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/non_app_contacts_widget.dart';
@@ -48,6 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           actions: [
             IconButton(
               onPressed: () async {
+                await ref.read(combinedContactsController.notifier).fetchAndFilter();
                
               },
               icon: const Icon(Icons.refresh),

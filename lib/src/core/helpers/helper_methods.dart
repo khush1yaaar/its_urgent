@@ -52,7 +52,7 @@ Future<void> showNotification(Map<String, dynamic> notificationData) async {
   await AwesomeNotifications().createNotification(
       content: NotificationContent(
     id: 1010,
-    channelKey: 'basic_channel',
+    channelKey: 'its_urgent_notifications',
     title: notificationData['title'],
     body: notificationData['body'],
     wakeUpScreen: true,

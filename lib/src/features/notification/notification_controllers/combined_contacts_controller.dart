@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,30 +13,32 @@ import 'package:its_urgent/src/features/notification/notification_models/non_app
 class CombinedContactsController extends AsyncNotifier<CombinedContacts> {
   @override
   Future<CombinedContacts> build() async {
-    final deviceContacts = await ref.read(deviceContactsProvider.future);
+    return await fetchAndFilter();
 
+  }
+
+  Future<CombinedContacts> fetchAndFilter() async {
+    final deviceContacts = await ref.read(deviceContactsProvider.future);
+    
     // Fetch userRefs from Firestore
     final List<UserRef> firestoreUserRefs =
         await ref.read(cloudFirestoreController).fetchUsersRefs();
-
+    
     // Filter app and non-app contacts
     final Map<String, dynamic> contactResults =
         _filterContacts(deviceContacts, firestoreUserRefs);
-
+    
     final List<AppContact> appContacts = await ref
         .read(cloudFirestoreController)
         .fetchUsersFromFirestore(contactResults['appContactsUserRefs']);
-
-
-   
-
+    
+    
+       
+    
     return CombinedContacts(
       appContacts: appContacts,
       nonAppContacts: contactResults['nonAppContacts'],
     );
-
-    // Optionally, fetch additional app contact details from Firestore if necessary
-    // For now, we're returning the app contacts as is
   }
 }
 

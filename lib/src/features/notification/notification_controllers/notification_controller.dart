@@ -8,6 +8,7 @@ import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart'
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 
 import 'package:its_urgent/src/core/routing/app_router.dart';
+import 'package:its_urgent/src/features/notification/notification_views/notification_screens/challenge_screen.dart';
 
 class NotificationController {
   final FirebaseMessaging _firebaseMessaging;
@@ -55,15 +56,13 @@ class NotificationController {
       if (message.data.isNotEmpty) {
         final type = message.data['type'];
         log('Type: $type');
-         final int focusStatus = await getFocusStatus();
-          final senderUid = message.data['senderUid'];
-          final receiverUid = message.data['receiverUid'];
+        final int focusStatus = await getFocusStatus();
+        final senderUid = message.data['senderUid'];
+        final receiverUid = message.data['receiverUid'];
 
         // get focus status & send the focus status back to the cloud function.
         if (type ==
             notificationTypeMap[NotificationType.getFocusStatus].toString()) {
-         
-
           await sendFocusStatusToCloudFunction(
               focusStatus: focusStatus,
               senderUid: senderUid,
@@ -71,8 +70,7 @@ class NotificationController {
         }
 
         if (message.notification != null) {
-          log(
-              'Message also contained a notification: ${message.notification.toString()}');
+          log('Message also contained a notification: ${message.notification.toString()}');
           final notificationData = {
             'title': message.notification!.title,
             'body': message.notification!.body,
@@ -83,11 +81,15 @@ class NotificationController {
         }
 
         if (type == notificationTypeMap[NotificationType.dndOn].toString()) {
-          context.goNamed(AppRoutes.challengeScreen.name, queryParameters: {
-            'name': message.data['receiverName'],
-              'senderUid': senderUid,
-              'receiverUid': receiverUid
-          });
+          showDialog(
+              context: rootNavigatorKey.currentContext!,
+              builder: (context) {
+                return ChallengeScreen(
+                    name: message.data['receiverName'],
+                    focusStatus: 2,
+                    senderUid: senderUid,
+                    receiverUid: receiverUid);
+              });
         }
       }
     }, onError: (error) {
@@ -107,10 +109,6 @@ class NotificationController {
 //     log('Failed to get Focus Status: ${e.message}');
 //   }
 // }
-
-
-
-
 
 // const notificationTypes = {
 //   100: "errorGettingFocusStatus",

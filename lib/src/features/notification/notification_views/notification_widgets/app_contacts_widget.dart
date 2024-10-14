@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
+import 'package:its_urgent/src/features/notification/notification_controllers/cloud_function_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_controllers/combined_contacts_controller.dart';
 
 
@@ -34,6 +36,12 @@ class AppContactsWidget extends ConsumerWidget {
                     ),
                   ),
                   title: Text(contact.name),
+                 onTap: () async {
+                    await ref.read(cloudFunctionProvider).getFocusStatus(
+                      receiverUid: contact.uid,
+                      senderUid: ref.read(itsUrgentUserController)!.uid
+                    );
+                  },
                 );
               },
             );
