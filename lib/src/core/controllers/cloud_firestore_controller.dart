@@ -76,7 +76,7 @@ class CloudFirestoreController {
       QuerySnapshot querySnapshot =
           await _db.collection(usersRefCollectionPath).get();
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-        log("UserRef: ${doc.data()}");
+       
         final user = UserRef(
           uid: doc[UserRefFields.uid.name],
           phoneNumber: doc.id,
@@ -86,7 +86,7 @@ class CloudFirestoreController {
     } catch (error) {
       log("Error retrieving Firestore data: $error");
     }
-    log("User references fetched: $usersRefs");
+   
     return usersRefs;
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/features/notification/notification_controllers/app_contacts_controller.dart';
+import 'package:its_urgent/src/features/notification/notification_controllers/combined_contacts_controller.dart';
 
 
 
@@ -9,12 +9,13 @@ class AppContactsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appContacts = ref.watch(appContactsProvider);
+    final contactsState = ref.watch(combinedContactsController);
 
     return Scaffold(
      
-        body: appContacts.when(
-          data: (contacts) {
+        body: contactsState.when(
+          data: (combinedContacts) {
+            final contacts = combinedContacts.appContacts;
             if (contacts.isEmpty) {
               return const Center(
                 child: Text('No contacts found.'),
@@ -45,6 +46,11 @@ class AppContactsWidget extends ConsumerWidget {
               return const Center(
                 child:
                     Text('Permission denied. Please enable contacts permission.'),
+              );
+            }
+            if (error.toString().contains('Device Contact Empty')) {
+              return const Center(
+                child: Text('There are no contacts on your device. Please add some contacts.'),
               );
             }
             return Center(

@@ -9,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/constants/theme.dart';
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
@@ -64,7 +63,7 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-const kIP = '192.168.0.35'; // for physical devices
+const kIP = '192.168.0.38'; // for physical devices
 const kLOCALHOST = '127.0.0.1'; // for emulators
 
 // Firebase emulators Setup
