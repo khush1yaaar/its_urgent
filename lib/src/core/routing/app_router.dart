@@ -8,7 +8,6 @@ import 'package:its_urgent/src/core/controllers/permissions_controller.dart';
 import 'package:its_urgent/src/core/views/screens/permissions_screen.dart';
 import 'package:its_urgent/src/core/helpers/go_router_refresh_stream.dart';
 import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
-import 'package:its_urgent/src/features/notification/notification_views/notification_screens/challenge_screen.dart';
 import 'package:its_urgent/src/features/splash/splash_providers/splash_screen_provider.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_screens/auth_screen.dart';
 import 'package:its_urgent/src/core/views/screens/error_screen.dart';

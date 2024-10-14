@@ -8,6 +8,7 @@ import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart'
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 
 import 'package:its_urgent/src/core/routing/app_router.dart';
+import 'package:its_urgent/src/features/auth/models/class_models/challenge.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_screens/challenge_screen.dart';
 
 class NotificationController {
@@ -88,7 +89,12 @@ class NotificationController {
                     name: message.data['receiverName'],
                     focusStatus: 2,
                     senderUid: senderUid,
-                    receiverUid: receiverUid);
+                    receiverUid: receiverUid,
+                    challenge: Challenge(
+                      question: message.data['question'],
+                      answer: message.data['answer'],
+                      answerType: message.data['answerType'],
+                    ));
               });
         }
       }
