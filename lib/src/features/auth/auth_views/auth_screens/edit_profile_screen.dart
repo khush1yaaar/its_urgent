@@ -84,6 +84,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         UserDocFields.name.name: _nameString,
         UserDocFields.imageUrl.name: imageUrl,
         UserDocFields.uid.name: uid,
+        
       });
 
       setState(() {

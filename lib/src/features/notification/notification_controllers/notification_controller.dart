@@ -120,3 +120,6 @@ class NotificationController {
 //   96: "dndOn",
 //   2: "dndOn",
 // };
+final notificationInstanceProvider = Provider<NotificationController>((ref) {
+  return NotificationController(FirebaseMessaging.instance, ref);
+});

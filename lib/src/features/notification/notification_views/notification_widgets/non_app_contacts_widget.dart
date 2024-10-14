@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:its_urgent/src/features/notification/notification_providers/device_contacts_provider.dart';
+import 'package:its_urgent/src/features/notification/notification_controllers/non_app_contacts_controller.dart';
 
-class DeviceContactsWidget extends ConsumerWidget {
-  const DeviceContactsWidget({super.key});
+
+class NonAppContactsWidget extends ConsumerWidget {
+  const NonAppContactsWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contactsState = ref.watch(deviceContactsProvider);
+    final contactsState = ref.watch(nonAppContactsProvider);
 
     return Scaffold(
       body: contactsState.when(
@@ -24,12 +25,12 @@ class DeviceContactsWidget extends ConsumerWidget {
               return ListTile(
                 leading: CircleAvatar(
                   child: Text(
-                    contact.displayName.isNotEmpty
-                        ? contact.displayName[0].toUpperCase()
+                    contact.name.isNotEmpty
+                        ? contact.name[0].toUpperCase()
                         : '?',
                   ),
                 ),
-                title: Text(contact.displayName),
+                title: Text(contact.name),
               );
             },
           );

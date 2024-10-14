@@ -1,16 +1,23 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
+import 'package:its_urgent/src/core/models/user_ref.dart';
+import 'package:its_urgent/src/core/helpers/format_phone_number.dart';
+import 'package:its_urgent/src/features/notification/notification_models/app_contact.dart';
+import 'package:its_urgent/src/features/notification/notification_models/device_contact_state.dart';
+import 'package:its_urgent/src/features/notification/notification_models/non_app_contact.dart';
 
-class DeviceContactsController extends AsyncNotifier<List<Contact>> {
+class NonAppContactsController extends AsyncNotifier<List<NonAppContact>> {
   @override
-  Future<List<Contact>> build() async {
+  Future<List<NonAppContact>> build() async {
     state = AsyncLoading();
 
     return await fetchContacts();
   }
 
-  Future<List<Contact>> fetchContacts() async {
-    // Request permission and handle denied permission
+  Future<List<NonAppContact>> fetchContacts() async {
+     // Request permission and handle denied permission
     final permissionGranted = await _requestPermission();
     if (!permissionGranted) {
       state = AsyncError(Exception('Permission denied'), StackTrace.current);
@@ -26,8 +33,13 @@ class DeviceContactsController extends AsyncNotifier<List<Contact>> {
       return [];
     }
 
+    final nonAppContacts = deviceContacts
+        .where((contact) => contact.phones.isNotEmpty)
+        .map((contact) => NonAppContact.fromContact(contact))
+        .toList();
+
     // Update with fetched contacts
-    return deviceContacts;
+    return nonAppContacts;
 
     // // Fetch userRefs from Firestore
     // final List<UserRef> firestoreUserRefs =
@@ -89,7 +101,8 @@ class DeviceContactsController extends AsyncNotifier<List<Contact>> {
   // }
 }
 
-final deviceContactsProvider =
-    AsyncNotifierProvider<DeviceContactsController, List<Contact>>(() {
-  return DeviceContactsController();
+
+final nonAppContactsProvider = AsyncNotifierProvider<NonAppContactsController, List<NonAppContact>>(() {
+  return  NonAppContactsController
+  ();
 });

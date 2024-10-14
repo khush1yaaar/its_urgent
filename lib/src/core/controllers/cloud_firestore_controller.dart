@@ -37,6 +37,7 @@ class CloudFirestoreController {
       {required String uid,
       required String name,
       required String imageUrl, required Challenge challenge}) async {
+    log("Adding user to Firestore");
     await _db.collection(usersCollectionPath).doc(uid).set(
       {
         UserDocFields.name.name: name,
@@ -69,11 +70,13 @@ class CloudFirestoreController {
   }
 
   Future<List<UserRef>> fetchUsersRefs() async {
+    log("Fetching user references from Firestore");
     List<UserRef> usersRefs = [];
     try {
       QuerySnapshot querySnapshot =
           await _db.collection(usersRefCollectionPath).get();
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        log("UserRef: ${doc.data()}");
         final user = UserRef(
           uid: doc[UserRefFields.uid.name],
           phoneNumber: doc.id,
@@ -83,6 +86,7 @@ class CloudFirestoreController {
     } catch (error) {
       log("Error retrieving Firestore data: $error");
     }
+    log("User references fetched: $usersRefs");
     return usersRefs;
   }
 
