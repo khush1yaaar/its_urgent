@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:its_urgent/src/core/views/widgets/elevated_button_with_icon.dart';
 import 'package:its_urgent/src/features/auth/auth_providers/selected_country_provider.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_widgets/confirm_dialog.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_widgets/countries_selector_button.dart';
@@ -28,7 +29,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       await parse("+$phoneCode$phoneNumber");
       wrongNumberFormat = false;
     } catch (e) {
-      
       wrongNumberFormat = true;
     }
 
@@ -83,7 +83,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   Text(
                     "It's Urgent app will need to verify your phone number. Carrier charges may apply.",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
                   const SizedBox(
@@ -99,7 +99,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ],
               ),
             ),
-            ElevatedButton(
+            ElevatedButtonWithIcon(
               onPressed: selectedCountry != null &&
                       _phoneNumberController.text.isNotEmpty
                   ? () {
@@ -107,11 +107,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           _phoneNumberController.text);
                     }
                   : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                foregroundColor:
-                    Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
               child: const Text("Next"),
             ),
           ],

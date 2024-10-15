@@ -1,70 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:its_urgent/src/core/views/widgets/elevated_button_with_icon.dart';
 import 'package:its_urgent/src/features/splash/splash_providers/splash_screen_provider.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 
-class SplashScreen extends ConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // FlutterNativeSplash.remove();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Hero(
-              tag: 'logo',
-              child: Image.asset(
-                'assets/cropped_image.png',
-                width: 250,
-                height: 250,
-              ),
-            ),
-            const SizedBox(
-              width: double.infinity,
-              height: 40,
-            ),
-            Text(
-              "Welcome to It's Urgent App",
-              style: Theme.of(context).textTheme.titleLarge!,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            Text(
-              "Tap \"Get Started\" to sign in or create account using your phone number.",
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: Theme.of(context).colorScheme.outline),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            ElevatedButton(
-              onPressed: () {
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Space between items
 
-                // change the splash screen boolean to true.
-                ref
-                    .read(splashScreenBooleanProvider.notifier)
-                    .onSplashScreenRemoved();
-                // then replace the splash screen route with auth screen route
-                context.goNamed(AppRoutes.authScreen.name);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                foregroundColor:
-                    Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              child: const Text("Get Started"),
-            ),
-          ],
+              children: [
+                // Centered Image
+                Expanded(
+                  child: Center(
+                      child: Image.asset(
+                    'assets/cropped_image.png',
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.contain,
+                  )
+
+                      // uses `Animate.defaultDuration`
+                      // inherits duration from fadeIn
+                      ),
+                ).animate().fadeIn(
+                    duration: 500.ms,
+                    begin: 0), // Fade in the image with a duration of 300ms
+
+                // Rest of the content at the bottom
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge!
+                            .copyWith(fontWeight: FontWeight.w900),
+                        children: [
+                          const TextSpan(text: "Welcome to "),
+                          TextSpan(
+                            text: "It's Urgent",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w900),
+                          ),
+                          const TextSpan(text: " App"),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Tap \"Get Started\" to sign in or create an account using your phone number.",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButtonWithIcon(
+                      onPressed: () {
+                        ref
+                            .read(splashScreenBooleanProvider.notifier)
+                            .onSplashScreenRemoved();
+                        context.goNamed(AppRoutes.permissionsScreen.name);
+                      },
+                      child: const Text("Get Started"),
+                    ),
+                  ]
+                      .animate(delay: 300.ms, interval: 300.ms)
+                      .fadeIn(duration: 500.ms, begin: 0),
+                ),
+              ]),
         ),
       ),
     );

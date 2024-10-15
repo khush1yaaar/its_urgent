@@ -7,6 +7,7 @@ PinTheme pinputPinTheme(BuildContext context) {
     height: 64,
     textStyle: Theme.of(context).textTheme.bodyLarge,
     decoration: const BoxDecoration(),
+    
   );
 }
 

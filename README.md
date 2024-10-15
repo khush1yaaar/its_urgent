@@ -66,3 +66,12 @@ lib
 + cloud_firestore
 + firebase_storage
 + firebase_messaging
++ cloud_functions
++ app_settings
++ url_launcher
++ focus_status (My own package) -  https://github.com/0xharkirat/focus_status.git
+```yaml
+  focus_status:
+    git:
+      url: https://github.com/0xharkirat/focus_status.git
+      ref: main
