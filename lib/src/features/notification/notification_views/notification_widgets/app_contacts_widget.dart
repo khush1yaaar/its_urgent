@@ -4,8 +4,6 @@ import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart'
 import 'package:its_urgent/src/features/notification/notification_controllers/cloud_function_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_controllers/combined_contacts_controller.dart';
 
-
-
 class AppContactsWidget extends ConsumerWidget {
   const AppContactsWidget({super.key});
 
@@ -14,58 +12,58 @@ class AppContactsWidget extends ConsumerWidget {
     final contactsState = ref.watch(combinedContactsController);
 
     return Scaffold(
-     
-        body: contactsState.when(
-          data: (combinedContacts) {
-            final contacts = combinedContacts.appContacts;
-            if (contacts.isEmpty) {
-              return const Center(
-                child: Text('No contacts found.'),
-              );
-            }
-            return ListView.builder(
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                final contact = contacts[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(
-                      contact.name.isNotEmpty
-                          ? contact.name[0].toUpperCase()
-                          : '?',
-                    ),
+      body: contactsState.when(
+        data: (combinedContacts) {
+          final contacts = combinedContacts.appContacts;
+          if (contacts.isEmpty) {
+            return const Center(
+              child: Text('No contacts found.'),
+            );
+          }
+          return ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (context, index) {
+              final contact = contacts[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  foregroundImage: NetworkImage(contact.imageUrl),
+                  child: Text(
+                    contact.name.isNotEmpty
+                        ? contact.name[0].toUpperCase()
+                        : '?',
                   ),
-                  title: Text(contact.name),
-                 onTap: () async {
-                    await ref.read(cloudFunctionProvider).getFocusStatus(
+                ),
+                title: Text(contact.name),
+                onTap: () async {
+                  await ref.read(cloudFunctionProvider).getFocusStatus(
                       receiverUid: contact.uid,
-                      senderUid: ref.read(itsUrgentUserController)!.uid
-                    );
-                  },
-                );
-              },
-            );
-          },
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stack) {
-            if (error.toString().contains('Permission denied')) {
-              return const Center(
-                child:
-                    Text('Permission denied. Please enable contacts permission.'),
+                      senderUid: ref.read(itsUrgentUserController)!.uid);
+                },
               );
-            }
-            if (error.toString().contains('Device Contact Empty')) {
-              return const Center(
-                child: Text('There are no contacts on your device. Please add some contacts.'),
-              );
-            }
-            return Center(
-              child: Text('An error occurred while fetching contacts: $error'),
-            );
-          },
+            },
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
         ),
-        );
+        error: (error, stack) {
+          if (error.toString().contains('Permission denied')) {
+            return const Center(
+              child:
+                  Text('Permission denied. Please enable contacts permission.'),
+            );
+          }
+          if (error.toString().contains('Device Contact Empty')) {
+            return const Center(
+              child: Text(
+                  'There are no contacts on your device. Please add some contacts.'),
+            );
+          }
+          return Center(
+            child: Text('An error occurred while fetching contacts: $error'),
+          );
+        },
+      ),
+    );
   }
 }

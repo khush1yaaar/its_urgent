@@ -1,5 +1,7 @@
 
 
+import 'dart:developer';
+
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart';
@@ -23,6 +25,8 @@ class CombinedContactsController extends AsyncNotifier<CombinedContacts> {
     // Fetch userRefs from Firestore
     final List<UserRef> firestoreUserRefs =
         await ref.read(cloudFirestoreController).fetchUsersRefs();
+
+    log("Firestore UserRefs: $firestoreUserRefs");
     
     // Filter app and non-app contacts
     final Map<String, dynamic> contactResults =
@@ -68,6 +72,7 @@ final combinedContactsController =
             .toList();
 
         if (matchingUserRefs.isNotEmpty) {
+          log("Matching UserRefs: $matchingUserRefs");
           appContactsUserRefs.add(matchingUserRefs
               .first); // Found in Firestore - it's an app contact
         } else {
