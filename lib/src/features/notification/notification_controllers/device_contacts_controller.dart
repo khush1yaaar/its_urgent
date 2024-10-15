@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DeviceContactsController extends AsyncNotifier<List<Contact>> {
   @override
   Future<List<Contact>> build() async {
-    state = AsyncLoading();
+    return await fetchContacts(); // No need to set `AsyncLoading` here, it's done automatically.
+  }
 
-    return await fetchContacts();
+  Future<void> refreshContacts() async {
+    state = const AsyncLoading(); // Set loading state explicitly during refresh
+    state = await AsyncValue.guard(() => fetchContacts());
   }
 
   Future<List<Contact>> fetchContacts() async {
@@ -17,18 +20,17 @@ class DeviceContactsController extends AsyncNotifier<List<Contact>> {
       return [];
     }
 
+   
+
     // Get all device contacts
     final List<Contact> deviceContacts = await _getContacts();
 
-    // Check if device contacts are empty
     if (deviceContacts.isEmpty) {
-      state = AsyncError(Exception('Device Contact Empty'),
-          StackTrace.current); // Update with empty list
+      state = AsyncError(Exception('Device contacts are empty'), StackTrace.current);
       return [];
     }
 
-    // Update with fetched contacts
-    return deviceContacts;
+    return deviceContacts; // Successfully fetched contacts
   }
 
   // Private methods

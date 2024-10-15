@@ -52,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onPressed: () async {
                 await ref
                     .read(combinedContactsController.notifier)
-                    .fetchAndFilter();
+                    .refresh();
               },
               icon: const Icon(Icons.refresh),
             ),

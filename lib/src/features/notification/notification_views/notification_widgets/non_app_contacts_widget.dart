@@ -32,30 +32,37 @@ class NonAppContactsWidget extends ConsumerWidget {
               child: Text('No contacts found.'),
             );
           }
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Text(
-                    contact.name.isNotEmpty ? getInitials(contact.name) : '?',
-                  ),
-                ),
-                title: Text(contact.name),
-                trailing: TextButton.icon(
-                  icon: const Icon(Icons.open_in_new),
-                  onPressed: () async {
-                    const String message =
-                        "You are invited to It's Urgent App. Check the app from https://github.com/0xharkirat/its_urgent";
-                    final smsURI =
-                        Uri.parse('sms:${contact.phoneNumber}?body=$message');
-                    await launchUrl(smsURI);
-                  },
-                  label: const Text("Invite"),
-                ),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(combinedContactsController.notifier)
+                  .refresh();
             },
+            child: ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text(
+                      contact.name.isNotEmpty ? getInitials(contact.name) : '?',
+                    ),
+                  ),
+                  title: Text(contact.name),
+                  trailing: TextButton.icon(
+                    icon: const Icon(Icons.open_in_new),
+                    onPressed: () async {
+                      const String message =
+                          "You are invited to It's Urgent App. Check the app from https://github.com/0xharkirat/its_urgent";
+                      final smsURI =
+                          Uri.parse('sms:${contact.phoneNumber}?body=$message');
+                      await launchUrl(smsURI);
+                    },
+                    label: const Text("Invite"),
+                  ),
+                );
+              },
+            ),
           );
         },
         loading: () => const Center(

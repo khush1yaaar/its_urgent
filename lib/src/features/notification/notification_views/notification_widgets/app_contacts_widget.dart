@@ -20,27 +20,34 @@ class AppContactsWidget extends ConsumerWidget {
               child: Text('No contacts found.'),
             );
           }
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  foregroundImage: NetworkImage(contact.imageUrl),
-                  child: Text(
-                    contact.name.isNotEmpty
-                        ? contact.name[0].toUpperCase()
-                        : '?',
-                  ),
-                ),
-                title: Text(contact.name),
-                onTap: () async {
-                  await ref.read(cloudFunctionProvider).getFocusStatus(
-                      receiverUid: contact.uid,
-                      senderUid: ref.read(itsUrgentUserController)!.uid);
-                },
-              );
+          return RefreshIndicator(
+            onRefresh: () {
+              return ref
+                  .read(combinedContactsController.notifier)
+                  .refresh();
             },
+            child: ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    foregroundImage: NetworkImage(contact.imageUrl),
+                    child: Text(
+                      contact.name.isNotEmpty
+                          ? contact.name[0].toUpperCase()
+                          : '?',
+                    ),
+                  ),
+                  title: Text(contact.name),
+                  onTap: () async {
+                    await ref.read(cloudFunctionProvider).getFocusStatus(
+                        receiverUid: contact.uid,
+                        senderUid: ref.read(itsUrgentUserController)!.uid);
+                  },
+                );
+              },
+            ),
           );
         },
         loading: () => const Center(
