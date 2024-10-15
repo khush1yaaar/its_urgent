@@ -49,24 +49,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           actions: [
             IconButton(
+              tooltip: "Refresh Contacts",
               onPressed: () async {
-                await ref
-                    .read(combinedContactsController.notifier)
-                    .refresh();
+                await ref.read(combinedContactsController.notifier).refresh();
               },
               icon: const Icon(Icons.refresh),
             ),
             IconButton(
+              tooltip: "Edit Profile",
+              onPressed: () async {
+                showDialog(
+                    context: context, builder: (_) => EditProfileDialog());
+              },
+              icon: const Icon(Icons.person),
+            ),
+            IconButton(
+              tooltip: "Logout",
               onPressed: () async {
                 await ref.read(phoneAuthController).signOut();
               },
-              icon: const Icon(Icons.logout),
-            ),
-            IconButton(
-              onPressed: () async {
-                showDialog(context: context, builder: (_) => EditProfileDialog());
-              },
-              icon: const Icon(Icons.person),
+              icon: Icon(Icons.logout, color: Colors.red[300]),
             ),
           ],
         ),
