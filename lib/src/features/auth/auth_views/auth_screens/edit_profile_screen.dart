@@ -16,7 +16,6 @@ import 'package:its_urgent/src/core/controllers/firebase_auth_controller.dart';
 
 import 'package:its_urgent/src/core/controllers/its_urgent_user_controller.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -84,7 +83,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         UserDocFields.name.name: _nameString,
         UserDocFields.imageUrl.name: imageUrl,
         UserDocFields.uid.name: uid,
-        
       });
 
       setState(() {
@@ -166,182 +164,179 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-        child: Expanded(
-          // to make sure that view does not overflow on any screen.
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  "Please provide your name and an optional profile photo",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(
-                  height: 28,
-                ),
-                CircleAvatar(
-                  maxRadius: size.width * 0.25,
-                  backgroundColor: _nameString.isEmpty
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Colors.transparent,
-                  backgroundImage: _currentUserImageUrl != null
-                      ? NetworkImage(_currentUserImageUrl!)
-                      : const AssetImage("assets/profile.jpg"),
-                  foregroundImage: _imageFile != null
-                      ? FileImage(File(_imageFile!.path))
-                      : null,
-                  child: _nameString.isEmpty
-                      ? Icon(
-                          Icons.add_a_photo_rounded,
-                          size: size.width * 0.25,
-                        )
-                      : null,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                if (_imageFile != null)
-                  TextButton.icon(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      setState(() {
-                        _imageFile = null;
-                      });
-                    },
-                    style: TextButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.error),
-                    label: const Text(
-                      "Remove Image",
-                    ),
-                  ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.add_a_photo,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      onPressed: () {
-                        _pickImage(ImageSource.camera);
-                      },
-                      label: Text(
-                        "Image from Camera",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              decoration: TextDecoration.underline,
-                              decorationThickness: 2,
-                              decorationColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ),
-                    TextButton.icon(
-                      icon: Icon(
-                        Icons.photo,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      onPressed: () {
-                        _pickImage(ImageSource.gallery);
-                      },
-                      label: Text(
-                        "Image from Gallery",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              decoration: TextDecoration.underline,
-                              decorationThickness: 2,
-                              decorationColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: _nameController,
-                  maxLength: 25,
-                  onChanged: (value) {
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                "Please provide your name and an optional profile photo",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(
+                height: 28,
+              ),
+              CircleAvatar(
+                maxRadius: size.width * 0.25,
+                backgroundColor: _nameString.isEmpty
+                    ? Theme.of(context).colorScheme.primaryContainer
+                    : Colors.transparent,
+                backgroundImage: _currentUserImageUrl != null
+                    ? NetworkImage(_currentUserImageUrl!)
+                    : const AssetImage("assets/profile.jpg"),
+                foregroundImage: _imageFile != null
+                    ? FileImage(File(_imageFile!.path))
+                    : null,
+                child: _nameString.isEmpty
+                    ? Icon(
+                        Icons.add_a_photo_rounded,
+                        size: size.width * 0.25,
+                      )
+                    : null,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              if (_imageFile != null)
+                TextButton.icon(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
                     setState(() {
-                      _nameString = value;
-                      if (_nameString.length >= 2) {
-                        _errorText = null;
-                      } else {
-                        _errorText =
-                            "Minimum 2 characters must be provided for the name";
-                      }
+                      _imageFile = null;
                     });
                   },
-                  decoration:
-                      InputDecoration(hintText: "Name", errorText: _errorText),
+                  style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error),
+                  label: const Text(
+                    "Remove Image",
+                  ),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
-                if (_uploadErrorText != null)
-                  SizedBox(
-                    width: double.infinity,
-                    height: 28,
-                    child: Text(
-                      _uploadErrorText!,
-                      textAlign: TextAlign.start,
+              Row(
+                children: [
+                  TextButton.icon(
+                    icon: Icon(
+                      Icons.add_a_photo,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onPressed: () {
+                      _pickImage(ImageSource.camera);
+                    },
+                    label: Text(
+                      "Camera Image",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: _isErrorUploading
-                              ? Theme.of(context).colorScheme.error
-                              : Theme.of(context).colorScheme.onSurface),
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 2,
+                            decorationColor:
+                                Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                     ),
                   ),
-                ListTile(
-                  tileColor: _challenge == null
-                      ? Theme.of(context)
-                          .colorScheme
-                          .errorContainer
-                          .withOpacity(0.5)
-                      : null,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: _challenge == null
-                            ? Theme.of(context).colorScheme.error
-                            : Theme.of(context).colorScheme.primary,
-                        width: 1),
-                    borderRadius: BorderRadius.circular(10),
+                  TextButton.icon(
+                    icon: Icon(
+                      Icons.photo,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onPressed: () {
+                      _pickImage(ImageSource.gallery);
+                    },
+                    label: Text(
+                      "Gallery Image",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 2,
+                            decorationColor:
+                                Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
                   ),
-                  leading: const Icon(
-                    Icons.security,
-                  ),
-                  title: Text(
-                    _challenge != null
-                        ? "Modify challenge here"
-                        : "Setup challenge here",
-                  ),
-                  subtitle: Text(
-                    _challenge != null ? "Status: Set." : "Status: Not set.",
-                  ),
-                  onTap: () {
-                    _showChallengeSetupDialog(context);
-                  },
-                  trailing: _challenge == null
-                      ? const Icon(Icons.warning)
-                      : const Icon(Icons.check),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                controller: _nameController,
+                maxLength: 25,
+                onChanged: (value) {
+                  setState(() {
+                    _nameString = value;
+                    if (_nameString.length >= 2) {
+                      _errorText = null;
+                    } else {
+                      _errorText =
+                          "Minimum 2 characters must be provided for the name";
+                    }
+                  });
+                },
+                decoration:
+                    InputDecoration(hintText: "Name", errorText: _errorText),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              if (_uploadErrorText != null)
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButtonWithIcon(
-                    onPressed: _nameString.length < 2 || _challenge == null
-                        ? null
-                        : () {
-                            _updateProfile(context);
-                          },
-                    child: const Text("Next"),
+                  height: 28,
+                  child: Text(
+                    _uploadErrorText!,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: _isErrorUploading
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
-              ],
-            ),
+              ListTile(
+                tileColor: _challenge == null
+                    ? Theme.of(context)
+                        .colorScheme
+                        .errorContainer
+                        .withOpacity(0.5)
+                    : null,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: _challenge == null
+                          ? Theme.of(context).colorScheme.error
+                          : Theme.of(context).colorScheme.primary,
+                      width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                leading: const Icon(
+                  Icons.security,
+                ),
+                title: Text(
+                  _challenge != null
+                      ? "Modify challenge here"
+                      : "Setup challenge here",
+                ),
+                subtitle: Text(
+                  _challenge != null ? "Status: Set." : "Status: Not set.",
+                ),
+                onTap: () {
+                  _showChallengeSetupDialog(context);
+                },
+                trailing: _challenge == null
+                    ? const Icon(Icons.warning)
+                    : const Icon(Icons.check),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButtonWithIcon(
+                  onPressed: _nameString.length < 2 || _challenge == null
+                      ? null
+                      : () {
+                          _updateProfile(context);
+                        },
+                  child: const Text("Next"),
+                ),
+              ),
+            ],
           ),
         ),
       ),

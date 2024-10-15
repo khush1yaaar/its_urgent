@@ -25,7 +25,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await init(); //init function from flutter_libphonenumber
-  await setupEmulators(); // setup Firebase Emulators for local development
+  // await setupEmulators(); // setup Firebase Emulators for local development
   FirebaseMessaging.onBackgroundMessage(
       firebaseMessagingBackgroundHandler); // register the background handler function
   AwesomeNotifications().initialize(
@@ -84,7 +84,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  log('Got a message whilst in the foreground!');
+  log('Got a message whilst in the background!');
   log('Message data: ${message.data}');
 
   if (message.notification != null) {

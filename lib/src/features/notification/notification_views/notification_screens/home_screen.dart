@@ -5,6 +5,7 @@ import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_control
 import 'package:its_urgent/src/features/notification/notification_controllers/combined_contacts_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_controllers/notification_controller.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/app_contacts_widget.dart';
+import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/edit_profile_dialog.dart';
 import 'package:its_urgent/src/features/notification/notification_views/notification_widgets/non_app_contacts_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -49,8 +50,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           actions: [
             IconButton(
               onPressed: () async {
-                await ref.read(combinedContactsController.notifier).fetchAndFilter();
-               
+                await ref
+                    .read(combinedContactsController.notifier)
+                    .fetchAndFilter();
               },
               icon: const Icon(Icons.refresh),
             ),
@@ -59,6 +61,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 await ref.read(phoneAuthController).signOut();
               },
               icon: const Icon(Icons.logout),
+            ),
+            IconButton(
+              onPressed: () async {
+                showDialog(context: context, builder: (_) => EditProfileDialog());
+              },
+              icon: const Icon(Icons.person),
             ),
           ],
         ),
