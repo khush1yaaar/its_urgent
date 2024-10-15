@@ -3,7 +3,8 @@
 
 This is frontend repo for `It's Urgent` Project which is being developed in Flutter. 
 
-Live YouTube Updates: https://www.youtube.com/playlist?list=PLLx2TfaNTPhxWUjVwRsbgZxqJ1j0NkrC5
+See Releases: [alpha](https://github.com/0xharkirat/its_urgent/releases/tag/alpha)  
+Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/alpha/its_urgent.apk)
 
 ## Backend
 Backend repo can be found at https://github.com/0xharkirat/its_urgent_backend
