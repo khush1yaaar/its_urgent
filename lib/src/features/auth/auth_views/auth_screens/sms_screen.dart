@@ -33,11 +33,13 @@ class _SmsScreenState extends ConsumerState<SmsScreen> {
 
     final result = await ref
         .read(phoneAuthController)
-        .verifyOtp(widget.verificationId, _otpCode);
+        .verifyOtp(widget.verificationId, _otpCode, widget.phoneNumber);
 
-    setState(() {
+    setState(()  {
       _isLoading = false;
       if (result == true) {
+          ref.read(currentUserPhoneController.notifier).updateCurrentUserPhone(
+              widget.phoneNumber);
         _isErrorText = false;
         _progressOrErrorText = "Verification successful!";
       } else {

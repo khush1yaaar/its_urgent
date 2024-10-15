@@ -30,12 +30,12 @@ class CombinedContactsController extends AsyncNotifier<CombinedContacts> {
   Future<CombinedContacts> fetchAndFilter() async {
     try {
       final deviceContacts = await ref.read(deviceContactsProvider.future);
-      log("Device Contacts: $deviceContacts");
+     
 
       // Fetch userRefs from Firestore
       final List<UserRef> firestoreUserRefs =
           await ref.read(cloudFirestoreController).fetchUsersRefs();
-      log("Firestore UserRefs: $firestoreUserRefs");
+     
 
       // Filter app and non-app contacts
       final Map<String, dynamic> contactResults =

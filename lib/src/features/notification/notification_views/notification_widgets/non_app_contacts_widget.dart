@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +21,7 @@ class NonAppContactsWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contactsState = ref.watch(combinedContactsController);
 
-    log("Current Non-App Contacts State: $contactsState");
+   
 
     return Scaffold(
       body: contactsState.when(
@@ -69,8 +69,26 @@ class NonAppContactsWidget extends ConsumerWidget {
           child: CircularProgressIndicator(),
         ),
         error: (error, stack) {
+          if (error.toString().contains('Permission denied')) {
+            return const Center(
+              child: Text(
+                  'Permission denied. Please enable contacts permission.',
+                  textAlign: TextAlign.center),
+            );
+          }
+          if (error.toString().contains('Device contacts are empty')) {
+            return const Center(
+              child: Text(
+                'There are no contacts on your device. Please add some contacts.',
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
           return Center(
-            child: Text('An error occurred while fetching contacts: $error'),
+            child: Text(
+              'An error occurred while fetching contacts: $error',
+              textAlign: TextAlign.center,
+            ),
           );
         },
       ),

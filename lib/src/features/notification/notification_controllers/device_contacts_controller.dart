@@ -8,8 +8,14 @@ class DeviceContactsController extends AsyncNotifier<List<Contact>> {
   }
 
   Future<void> refreshContacts() async {
-    state = const AsyncLoading(); // Set loading state explicitly during refresh
-    state = await AsyncValue.guard(() => fetchContacts());
+    state = const AsyncLoading(); // Set loading state explicitly for refresh
+
+    try {
+      final contacts = await fetchContacts();
+      state = AsyncValue.data(contacts); // Update state with fetched contacts
+    } catch (e, st) {
+      state = AsyncValue.error(e, st); // Set error state with exception
+    }
   }
 
   Future<List<Contact>> fetchContacts() async {

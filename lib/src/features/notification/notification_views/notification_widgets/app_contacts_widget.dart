@@ -22,9 +22,7 @@ class AppContactsWidget extends ConsumerWidget {
           }
           return RefreshIndicator(
             onRefresh: () {
-              return ref
-                  .read(combinedContactsController.notifier)
-                  .refresh();
+              return ref.read(combinedContactsController.notifier).refresh();
             },
             child: ListView.builder(
               itemCount: contacts.length,
@@ -56,18 +54,24 @@ class AppContactsWidget extends ConsumerWidget {
         error: (error, stack) {
           if (error.toString().contains('Permission denied')) {
             return const Center(
-              child:
-                  Text('Permission denied. Please enable contacts permission.'),
+              child: Text(
+                  'Permission denied. Please enable contacts permission.',
+                  textAlign: TextAlign.center),
             );
           }
-          if (error.toString().contains('Device Contact Empty')) {
+          if (error.toString().contains('Device contacts are empty')) {
             return const Center(
               child: Text(
-                  'There are no contacts on your device. Please add some contacts.'),
+                'There are no contacts on your device. Please add some contacts.',
+                textAlign: TextAlign.center,
+              ),
             );
           }
           return Center(
-            child: Text('An error occurred while fetching contacts: $error'),
+            child: Text(
+              'An error occurred while fetching contacts: $error',
+              textAlign: TextAlign.center,
+            ),
           );
         },
       ),

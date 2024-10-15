@@ -8,6 +8,7 @@ import 'package:its_urgent/src/core/controllers/cloud_firestore_controller.dart'
 import 'package:its_urgent/src/core/controllers/firebase_storage_controller.dart';
 import 'package:its_urgent/src/core/models/its_urgent_user.dart';
 import 'package:its_urgent/src/core/views/widgets/elevated_button_with_icon.dart';
+import 'package:its_urgent/src/features/auth/auth_controllers/phone_auth_controller.dart';
 import 'package:its_urgent/src/features/auth/auth_views/auth_widgets/challenge_setup_dialog.dart';
 import 'package:its_urgent/src/features/auth/models/class_models/challenge.dart';
 import 'package:its_urgent/src/features/auth/models/data_constants/default_profile_image.dart';
@@ -159,7 +160,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile Info"),
+        title: Consumer(builder: (context, ref, _) {
+          final currentPhone = ref.watch(currentUserPhoneController);
+          return Text("Profile Info (${currentPhone.value})");
+        }),
         centerTitle: true,
       ),
       body: Padding(
@@ -170,7 +174,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               Text(
                 "Please provide your name and an optional profile photo",
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
               const SizedBox(
