@@ -3,8 +3,10 @@
 
 This is frontend repo for `It's Urgent` Project which is being developed in Flutter. 
 
-See Releases: [alpha](https://github.com/0xharkirat/its_urgent/releases/tag/alpha)  
-Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/alpha/its_urgent.apk)
+**Note: This app is all ready working with real otps (10 sms/day free). Please do not abuse the otp verification as Firebase otp verification is on paid plan. (Send me DM on slack @0xharkirat & I will add your number for testing purpose with OTP 123456.**
+
+See Releases: [beta-v1.0](https://github.com/0xharkirat/its_urgent/releases/tag/beta-v1.0)  
+Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/beta-v1.0/app-release.apk)
 
 ## Backend
 Backend repo can be found at https://github.com/0xharkirat/its_urgent_backend
