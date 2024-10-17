@@ -9,6 +9,7 @@ Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/downl
 ## Backend
 Backend repo can be found at https://github.com/0xharkirat/its_urgent_backend
 
+![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/splash_screen.jpg)
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -129,6 +130,11 @@ Here are some sources discussing the reliance of alternatives on FCM:
 
 
 ## 3. User Authentication & Management
+
+|   |   |   |
+| ------------ | ------------ | ------------ |
+| ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/phone_auth_screen.jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/country_code_selector.jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/auth_confirm_dialog.jpg) |
+
 ### Implementation Overview
 #### 1. Firebase Phone Authentication:
 - Uses OTP-based authentication to verify the user’s phone number.
@@ -141,12 +147,17 @@ Here are some sources discussing the reliance of alternatives on FCM:
 - Device ID is essential for:
 	- FCM (Firebase Cloud Messaging) notifications to the specific device.
 
+|   |   |
+| ------------ | ------------ |
+| ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/Edit_profile_screen.jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/challenge_setup_screen.jpg) | 
+
 #### 3. Phone Number Formatting and Validation
 - Uses the `flutter_libphonenumber` package for:
   - Country code selection and formatting.
   - Phone number validation to ensure numbers are in the correct format.
   - Automatically formats the phone number input field based on the selected country.
 #### 4. OTP UI Implementation
+![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/verify_otp_screen.jpg)
 - Uses the `pinput` package for:
   - **Stylized OTP input UI** with custom animation and input validation.
   - Easy user experience for entering OTPs with built-in features like:
@@ -175,6 +186,12 @@ Here are some sources discussing the reliance of alternatives on FCM:
 
 
 ## 4. Notification Management
+
+|   |   |
+| ------------ | ------------ |
+| ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/home_screen(app_contacts_tab).jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/non_app_contacts_tab.jpg) |
+
+
 The home screen is the primary interface for users, organized into two tabs:
 1. **App Contacts**
 2. **Non-App Contacts**
@@ -285,6 +302,9 @@ To manage on-device notifications, the `awesome_notifications` package is used, 
 ## 5. Permission Handling
 For the app to function optimally, three main permissions are required. These permissions are managed in the `permission_screen`, which is presented to the user upon their first interaction with the app.
 
+|   |   |   |
+| ------------ | ------------ | ------------ |
+| ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/permissions_dialog.jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/readme_images/permissions_screen.jpg) | ![](https://raw.githubusercontent.com/0xharkirat/its_urgent/refs/heads/main/assets/notifications.gif) |
 ### 1. Accessing Device Contacts
 - The app needs permission to access the user's device contacts to read and filter contacts effectively.
 - This permission is managed using the `flutter_contacts` package, which simplifies the process of requesting and handling contacts permissions.
