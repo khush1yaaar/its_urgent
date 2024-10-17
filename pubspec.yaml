@@ -29,10 +29,6 @@ dependencies:
   app_settings: ^5.1.1
   url_launcher: ^6.3.0
   cloud_functions: ^5.1.3
-  
-  # focus_status:
-  #     path: D:/flutter_plugins/focus_status
-  # my own plugin from github
   focus_status:
     git:
       url: https://github.com/0xharkirat/focus_status.git
