@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Lock orientation to portrait up only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -29,7 +36,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(
       firebaseMessagingBackgroundHandler); // register the background handler function
   AwesomeNotifications().initialize(
-    null,
+    'resource://drawable/logo', // Use 'resource://drawable/<icon_name>'
     [
       NotificationChannel(
         channelKey: 'its_urgent_notifications',

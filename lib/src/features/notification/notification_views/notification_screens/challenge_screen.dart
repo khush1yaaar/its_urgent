@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
-import 'package:its_urgent/src/core/routing/app_router.dart';
 import 'package:its_urgent/src/features/auth/models/class_models/challenge.dart';
 
 class ChallengeScreen extends StatefulWidget {
@@ -60,6 +57,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         appBar: AppBar(
           title: const Text("DND MODE Challenge"),
           centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
@@ -140,8 +143,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                       : null,
                   child: const Text('Send Notification'),
                 ),
-                Text("Sender Uid: ${widget.senderUid}"),
-                Text("Receiver Uid: ${widget.receiverUid}"),
+               
               ],
             ),
           ),
