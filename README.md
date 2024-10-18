@@ -5,8 +5,12 @@ This is frontend repo for `It's Urgent` Project which is being developed in Flut
 
 **Note: This app is all ready working with real otps (10 sms/day free). Please do not abuse the otp verification as Firebase otp verification is on paid plan. (Send me DM on slack @0xharkirat & I will add your number for testing purpose with OTP 123456.**
 
+[Accepted Proposal](https://github.com/0xharkirat/gsoc-proposal/blob/main/Copy%20of%20harkirat-singh-its-urgent-proposal-gsoc24.pdf)  
+[Org's Project Idea here](https://ccextractor.org/public/gsoc/2024/itsurgent/)  
 See Releases: [beta-v1.0](https://github.com/0xharkirat/its_urgent/releases/tag/beta-v1.0)  
-Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/beta-v1.0/app-release.apk)
+Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/beta-v1.0/app-release.apk)  
+YouTube Demo [part 1](https://youtu.be/Ve58RqI_5is)  
+YouTube Demo [part 2](https://youtu.be/3gKUTA-tHmE) (Watch on 1.25x speed)
 
 ## Backend
 Backend repo can be found at https://github.com/0xharkirat/its_urgent_backend
