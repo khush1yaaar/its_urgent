@@ -7,8 +7,8 @@ This is frontend repo for `It's Urgent` Project which is being developed in Flut
 
 [Accepted Proposal](https://github.com/0xharkirat/gsoc-proposal/blob/main/Copy%20of%20harkirat-singh-its-urgent-proposal-gsoc24.pdf)  
 [Org's Project Idea here](https://ccextractor.org/public/gsoc/2024/itsurgent/)  
-See Releases: [beta-v1.0](https://github.com/0xharkirat/its_urgent/releases/tag/beta-v1.0)  
-Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/beta-v1.0/app-release.apk)  
+See Releases: [beta-v1.0-fixed](https://github.com/0xharkirat/its_urgent/releases/tag/beta-v1.0-fixed)  
+Download apk from [here](https://github.com/0xharkirat/its_urgent/releases/download/beta-v1.0-fixed/its_urgent.apk)  
 YouTube Demo [part 1](https://youtu.be/Ve58RqI_5is)  
 YouTube Demo [part 2](https://youtu.be/3gKUTA-tHmE) (Watch on 1.25x speed)
 
