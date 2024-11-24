@@ -61,17 +61,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-    return 
-    MaterialApp(
-      home: HomeScreen(),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      theme: darkTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.dark,
+      routerConfig: goRouter,
     );
-    // MaterialApp.router(
-    //   debugShowCheckedModeBanner: false,
-    //   theme: darkTheme,
-    //   darkTheme: darkTheme,
-    //   themeMode: ThemeMode.dark,
-    //   routerConfig: goRouter,
-    // );
   }
 }
 
