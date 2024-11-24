@@ -31,6 +31,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _init();
   }
 
+  Future<void> _showLogoutDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log Out'),
+        content: const Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await ref.read(phoneAuthController).signOut();
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Rounded border
+              ),
+            ),
+            child: const Text('Log Out'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -66,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             IconButton(
               tooltip: "Logout",
               onPressed: () async {
-                await ref.read(phoneAuthController).signOut();
+                await _showLogoutDialog(context);
               },
               icon: Icon(Icons.logout, color: Colors.red[300]),
             ),

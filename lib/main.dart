@@ -15,6 +15,7 @@ import 'package:its_urgent/src/core/constants/theme.dart';
 import 'package:its_urgent/src/core/helpers/helper_methods.dart';
 import 'package:its_urgent/src/core/routing/app_router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:its_urgent/src/features/notification/notification_views/notification_screens/home_screen.dart';
 import 'firebase_options.dart';
 
 /// The [main] function is the entry point of the Flutter app.
@@ -60,13 +61,17 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      theme: darkTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
-      routerConfig: goRouter,
+    return 
+    MaterialApp(
+      home: HomeScreen(),
     );
+    // MaterialApp.router(
+    //   debugShowCheckedModeBanner: false,
+    //   theme: darkTheme,
+    //   darkTheme: darkTheme,
+    //   themeMode: ThemeMode.dark,
+    //   routerConfig: goRouter,
+    // );
   }
 }
 
